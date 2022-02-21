@@ -1,0 +1,17 @@
+.navbar {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  width: 100%;
+  background-color: rgb(49, 84, 182);
+  height: 50px;
+}
+
+.logo {
+  list-style: none;
+  font-size: 24px;
+  font-family: Verdana, Geneva, Tahoma, sans-serif;
+  padding: 10px;
+  margin: 0 30px;
+  color: white;
+}

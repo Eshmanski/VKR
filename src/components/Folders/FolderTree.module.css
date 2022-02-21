@@ -1,0 +1,19 @@
+.addBtn {
+  position: absolute;
+  width: 15px;
+  height: 15px;
+  top: 1px;
+  right: 5px;
+  z-index: 99;
+}
+
+.addBtn svg {
+  height: 100%;
+  width: 100%;
+}
+
+.addBtn svg:hover {
+  background-color: rgb(255, 255, 255);
+  color: black;
+  cursor: pointer;
+}

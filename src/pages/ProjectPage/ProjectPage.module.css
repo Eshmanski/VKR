@@ -1,0 +1,6 @@
+.project-page {
+  display: flex;
+  flex-direction: row;
+  height: calc(100vh - 52px);
+  font-size: 0.8rem;
+}

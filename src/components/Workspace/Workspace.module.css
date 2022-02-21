@@ -1,0 +1,5 @@
+.workspace {
+  background:  rgb(212, 212, 212);
+  width: 100%;
+  height: calc(100vh - 50px);
+}
