@@ -19,17 +19,13 @@ function Sidebar() {
   const data = useSelector(store => store.data);
   const dispatch = useDispatch();
 
-  const addFile = (type, newName) => {
-    const idx = data.findIndex(pack => pack.typeItems === type);
-
-    if(idx !== -1) {
-      const itemId = nextId(`${type}-`);
-      const newItem = { name: newName, id: itemId }
-
-      handleClose();
-      dispatch(addItem(idx, newItem));
-      dispatch(setChosenItem(itemId, type));
-    }
+  const addFile = (packType, itemName) => {
+    const itemId = nextId(`${packType}-`);
+ 
+    handleClose();
+    dispatch(addItem({itemId, itemName, packType}));
+    dispatch(setChosenItem({itemId, packType}));
+    
   } 
 
   const handleOpen = (typeData) => setModalOptions({

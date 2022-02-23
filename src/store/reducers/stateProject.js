@@ -2,7 +2,8 @@ import { SET_CHOSEN_ITEM, TOGGLE_PACK } from "../actions/actionsTypes";
 
 const initialState = {
   chosenPacks: ['product'],
-  chosenItem: '',
+  chosenItemId: '',
+  chosenType: '',
 }
 
 export default function stateProjectReducer(state = initialState, action) {
@@ -16,15 +17,15 @@ export default function stateProjectReducer(state = initialState, action) {
   }
 }
 
-function setChosenItem(state, payload) {
-  if(state.chosenPacks.includes(payload.type)) 
-    return {...state, chosenItem: payload.itemId};
+function setChosenItem(state, {itemId, packType}) {
+  if(state.chosenPacks.includes(packType)) 
+    return {...state, chosenItemId: itemId, chosenType: packType};
   else 
-    return  { ...state, chosenPacks: [...state.chosenPacks, payload.type], chosenItem: payload.itemId };
+    return  { ...state, chosenPacks: [...state.chosenPacks, packType], chosenItemId: itemId, chosenType: packType };
 }
-function togglePack(state, payload) {
-  if(state.chosenPacks.includes(payload.type))
-    return { ...state, chosenPacks: state.chosenPacks.filter(i => i !== payload.type) };
+function togglePack(state, {packType}) {
+  if(state.chosenPacks.includes(packType))
+    return { ...state, chosenPacks: state.chosenPacks.filter(i => i !== packType) };
   else 
-    return { ...state, chosenPacks: [...state.chosenPacks, payload.type] };
+    return { ...state, chosenPacks: [...state.chosenPacks, packType] };
 }

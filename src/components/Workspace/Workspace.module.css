@@ -1,5 +1,12 @@
 .workspace {
-  background:  rgb(212, 212, 212);
-  width: 100%;
-  height: calc(100vh - 50px);
+  position: absolute;
+  left: 250px;
+  top: 0;
+  bottom: 0;
+  min-width: 1000px;
+  min-height: 1000px;
+  width: calc(100vw - 250px);
+  overflow: auto;
+  padding: 30px;
+  background: rgb(235, 235, 235);
 }

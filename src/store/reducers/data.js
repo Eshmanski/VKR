@@ -1,36 +1,56 @@
-import { ADD_ITEM } from "../actions/actionsTypes";
+import { ADD_ITEM, CHANGE_BODY, CHANGE_LABEL } from "../actions/actionsTypes";
 
-const initialState = [
-  {
-    typeItems: 'product',
+
+const initialState = {
+  'product': {
     name: 'Изделия',
-    items: [
-      {id: '1', name: 'изделие_1', type: 'product'}
-    ],
+    items: [],
   },
-  {
-    typeItems: 'component',
+  'component': {
     name: 'Деталь',
     items: []
   },
-  {
-    typeItems: 'workshop',
+  'workshop': {
     name: 'Цеха',
     items: [],
   },
-  {
-    typeItems: 'route',
+  'route': {
     name: 'Маршруты',
     items: [],
   }
-]
+}
 
 export default function dataReducer(state = initialState, action) {
   switch(action.type) {
     case ADD_ITEM:
-      state[action.payload.idx].items.push(action.payload.item);
-      return state;
+      return addItem(state, action.payload);
+    case CHANGE_LABEL:
+      return changeLabel(state, action.payload);
+    case CHANGE_BODY:
+      return changeBody(state, action.payload);
     default:
       return state;
   }
+}
+
+function addItem(state, {itemId, itemName, packType}) {
+  const newItems = state[packType].items.concat();
+  newItems.push({id: itemId, label: itemName, type: packType, body: { name: itemName }});
+  return {...state, [packType]: {...state[packType], items: newItems}};
+}
+
+function changeLabel(state, {itemId, newLabel, packType}) {
+  const newItems = state[packType].items.map(item=>{
+    if(item.id === itemId) return {...item, label: newLabel};
+    return item;
+  });
+  return {...state, [packType]: {...state[packType], items: newItems}};
+}
+
+function changeBody(state, {itemId, newBody, packType}) {
+  const newItems = state[packType].items.map(item=>{
+    if(item.id === itemId) return {...item, body: newBody};
+    return item;
+  });
+  return {...state, [packType]: {...state[packType], items: newItems}};
 }

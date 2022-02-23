@@ -9,27 +9,34 @@ import { setChosenItem, togglePack } from '../../store/actions/stateProjectActio
 
 
 function FolderTree({ data, handleOpen}) {
-  const {chosenPacks, chosenItem} = useSelector(store => store.stateProject);
+  const {chosenPacks, chosenItemId} = useSelector(store => store.stateProject);
   const dispatch = useDispatch();
 
-  const clickPackHandler = (type) => dispatch(togglePack(type));
-  const clickItemHandler = (id, type) => dispatch(setChosenItem(id, type));
+  const clickPackHandler = (packType) => dispatch(togglePack(packType));
+  const clickItemHandler = (itemId, packType) => {
+    dispatch(setChosenItem({itemId, packType}));
+  }
 
   return (
     <TreeView
-      aria-label="file system navigator"
       defaultCollapseIcon={<ExpandMoreIcon />}
       defaultExpandIcon={<ChevronRightIcon />}
-      sx={{height: '100%', width: 'inherit', overflowX: 'hidden', fontSize: '14px'}}
+      sx={{
+        flexGrow: 1,
+        width: 'inherit', 
+        overflowX: 'hidden', 
+        fontSize: '14px',
+        overflowY: 'scroll',
+      }}
       expanded={chosenPacks}
-      selected={[chosenItem]}
+      selected={[chosenItemId]}
     >
-      {data.map((pack) => {
+      {Object.keys(data).map((key) => {
         return (
-            <div style={{position: 'relative'}} key={pack.typeItems}>
-            <div className={styles.addBtn} onClick={() => handleOpen(pack.typeItems)}><AddIcon></AddIcon></div>
-              <TreeItem nodeId={pack.typeItems} label={pack.name} onClick={() => clickPackHandler(pack.typeItems)}>
-                {pack.items.map(item => <TreeItem nodeId={item.id} label={item.name} key={item.id} onClick={() => clickItemHandler(item.id, pack.typeItems)}/>)}
+            <div style={{position: 'relative'}} key={key}>
+            <div className={styles.addBtn} onClick={() => handleOpen(key)}><AddIcon></AddIcon></div>
+              <TreeItem nodeId={key} label={data[key].name} onClick={() => clickPackHandler(key)}>
+                {data[key].items.map(item => <TreeItem nodeId={item.id} label={item.label} key={item.id} onClick={() => clickItemHandler(item.id, key)}/>)}
               </TreeItem>
             </div>
         );

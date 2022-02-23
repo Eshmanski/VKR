@@ -1,0 +1,64 @@
+.info {
+  width: 600px;
+  /* border: 1px dashed black; */
+  margin: auto;
+  text-align: left;
+  background-color: transparent;
+}
+
+.header {
+  margin: 20px 0;
+  font-size: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.label, .inputLabel {
+  padding: 5px;
+  width: 100px;
+  margin-left: 5px;
+}
+
+.inputLabel {
+  font-size: 20px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+
+.description {
+  min-height: 100px;
+}
+
+
+
+.hiddenInput {
+  width: 98.5%;
+  margin: 0;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  padding: 5px;
+}
+
+textarea {
+  width: 98.5%;
+  resize: none;
+  font-size: 16px;
+}
+
+.inputBox {
+  padding: 5px;
+}
+
+.editIcon {
+  margin-left: 10px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.editIcon:hover {
+  color: green;
+}

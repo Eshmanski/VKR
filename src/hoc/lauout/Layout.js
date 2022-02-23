@@ -5,7 +5,7 @@ import styles from './Layout.module.css';
 const theme = createTheme({
   typography: {
     fontSize: 14,
-  }
+  },
 })
 
 function Layout({ children }) {

@@ -1,0 +1,37 @@
+.header {
+  margin: 20px 0;
+  font-size: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  text-align: left;
+}
+
+.label, .inputLabel {
+  padding: 5px;
+  
+  margin-left: 5px;
+  overflow: hidden;
+}
+
+.label {
+  font-weight: bold;
+}
+
+.inputLabel {
+  font-size: 20px;
+  border: none;
+  outline: none;
+  border-radius: 5px;
+}
+
+.editIcon {
+  margin-left: 10px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.editIcon:hover {
+  color: green;
+}

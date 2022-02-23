@@ -14,8 +14,8 @@ function ProjectPage() {
     <Provider store={store}>
       <Box
         sx={{
-          display: 'flex',
-          flexDirection: 'row',
+          position: 'relative',
+          height: 'calc(100vh - 50px)',
         }}
       >
         <Sidebar></Sidebar>
