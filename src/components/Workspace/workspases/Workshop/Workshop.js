@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import styles from './Workshop.module.css'
-import { changeBody } from '../../../../store/actions/dataActions';
+import { changeBodyWorkshop } from '../../../../store/actions/dataActions';
 import Title from '../../../Title/Title';
 
 
@@ -28,7 +28,7 @@ function Workshop({itemType, itemId}) {
   ]);
 
   const saveBody = () => {
-    dispatch(changeBody({itemId, newBody: {name: inputName, description: inputDescription}, packType: itemType}));
+    dispatch(changeBodyWorkshop({itemId, newBody: {name: inputName, description: inputDescription}, packType: itemType}));
     setIsEditBody(false);
   }
 

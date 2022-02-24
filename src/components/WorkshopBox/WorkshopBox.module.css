@@ -1,0 +1,8 @@
+.workshopBox {
+  position: absolute;
+  
+  background-color: rgb(235, 235, 235);
+  border: 1px solid black;
+  z-index: 999;
+  cursor: grab;
+}

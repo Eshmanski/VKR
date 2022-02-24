@@ -1,9 +1,9 @@
 import { SET_CHOSEN_ITEM, TOGGLE_PACK } from "../actions/actionsTypes";
 
 const initialState = {
-  chosenPacks: ['product'],
-  chosenItemId: '',
-  chosenType: '',
+  chosenPacks: ['route'],
+  chosenItemId: 'route-999',
+  chosenType: 'route',
 }
 
 export default function stateProjectReducer(state = initialState, action) {

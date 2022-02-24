@@ -1,6 +1,9 @@
 export const ADD_ITEM = 'ADD_ITEM';
+export const ADD_WORKSHOP_ROAD = 'ADD_WORKSHOP_ROAD';
+export const ADD_LINE_ROAD = 'ADD_LINE_ROAD';
+export const UPDATE_WORKSHOP_ROAD = 'UPDATE_WORKSHOP_ROAD';
 export const CHANGE_LABEL = 'CHANGE_LABEL';
-export const CHANGE_BODY = 'SET_CHOSEN_BODY';
+export const CHANGE_BODY_WORKSHOP = 'SET_CHOSEN_BODY';
 
 export const SET_CHOSEN_ITEM = 'SET_CHOSEN_ITEM';
 export const TOGGLE_PACK = 'TOGGLE_PACK';

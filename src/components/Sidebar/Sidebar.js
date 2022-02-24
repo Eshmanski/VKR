@@ -25,7 +25,6 @@ function Sidebar() {
     handleClose();
     dispatch(addItem({itemId, itemName, packType}));
     dispatch(setChosenItem({itemId, packType}));
-    
   } 
 
   const handleOpen = (typeData) => setModalOptions({
@@ -38,19 +37,15 @@ function Sidebar() {
     typeData: '',
   });
 
-
-
-  
   return (
     <div className={styles.sidebar}>
       <p>Предприятие</p>
       <FolderTree 
         data={data} 
-        handleOpen={handleOpen}
+        onOpen={handleOpen}
       ></FolderTree>
       <CreateItem modalOptions={modalOptions} onAddFile={addFile} onClose={handleClose}></CreateItem>
     </div>
-
   )
 }
 
