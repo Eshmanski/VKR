@@ -1,8 +1,17 @@
 .workshopBox {
+  line-height: 40px;
+  vertical-align: middle;
   position: absolute;
-  
   background-color: rgb(235, 235, 235);
   border: 1px solid black;
   z-index: 999;
   cursor: grab;
+}
+
+.deleteBox:hover {
+  border: 1px solid red !important;
+}
+
+.createLine:hover {
+  border: 1px solid blue !important;
 }

@@ -30,7 +30,7 @@ function CreateBox({modalOptions, onAddBox, onClose, workshopItems}) {
               onChange={(e) => {setText(e.target.value)}}
             >
               {workshopItems.map(item => {
-                return <MenuItem key={item.id} value={item.id}>{item.label}</MenuItem>
+                return <MenuItem key={item.id} value={item.id}>{item.title}</MenuItem>
               })}
             </Select>
             <Button

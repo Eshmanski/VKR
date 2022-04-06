@@ -33,7 +33,16 @@
 }
 
 .hiddenInput {
-  width: 98.5%;
+  width: 97.5%;
+  margin: 0;
+  outline: none;
+  border: none;
+  font-size: 16px;
+  padding: 5px;
+}
+
+.hiddenSelect {
+  width: 100%;
   margin: 0;
   outline: none;
   border: none;

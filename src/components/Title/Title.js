@@ -2,39 +2,49 @@ import { useState, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
 import { Edit, CheckCircle } from '@mui/icons-material';
 import { declinationTitle } from '../../shared/utils';
-import { changeLabel } from '../../store/actions/dataActions';
 import styles from './Title.module.css';
+import { updateRouteTitle } from '../../store/actions/routeDataAction';
+import { updateWorkshopTitle } from '../../store/actions/workshopDataAction';
+import { updateProductTitle } from '../../store/actions/productDataActons';
+import { updateComponentTitle } from '../../store/actions/componentDataAction';
 
+const titleActions = {
+  componentData: updateComponentTitle,
+  productData: updateProductTitle,
+  workshopData: updateWorkshopTitle,
+  routeData: updateRouteTitle,
+}
 
 function Title({itemType, itemId, projectItem}) {
   const dispatch = useDispatch();
-  const [isEditLabel, setIsEditLabel] = useState(false);
-  const [inputLabel, setInputLabel] = useState('');
+  const [isEditTitle, setIsEditTitle] = useState(false);
+  const [inputTitle, setInputTitle] = useState('');
   
   useEffect(() => {
-    setInputLabel(projectItem.label);
+    setInputTitle(projectItem.title);
   }, [
-    projectItem.label,
+    projectItem.title,
   ]);
 
-  const saveLabel = () => {
-    dispatch(changeLabel({itemId, newLabel: inputLabel, packType: itemType}));
-    setIsEditLabel(false);
+  const saveTitle = () => {
+    console.log(titleActions[itemType]);
+    dispatch(titleActions[itemType]({ itemId, newTitle: inputTitle }))
+    setIsEditTitle(false);
   }
 
   return (
     <div className={styles.header}>
       {declinationTitle(itemType, 1)}:
-      {isEditLabel ||
+      {isEditTitle ||
         <>
-          <div className={styles.label}>{inputLabel}</div>
-          <Edit className={styles.editIcon} onClick={() => setIsEditLabel(true)}></Edit>
+          <div className={styles.title}>{inputTitle}</div>
+          <Edit className={styles.editIcon} onClick={() => setIsEditTitle(true)}></Edit>
         </>
       }
-      {isEditLabel &&
+      {isEditTitle &&
         <>
-          <input className={styles.inputLabel} onChange={(e)=>setInputLabel(e.target.value)} type="text" value={inputLabel}/>
-          <CheckCircle className={styles.editIcon} onClick={saveLabel}></CheckCircle>
+          <input className={styles.inputTitle} onChange={(e)=>setInputTitle(e.target.value)} type="text" value={inputTitle}/>
+          <CheckCircle className={styles.editIcon} onClick={saveTitle}></CheckCircle>
         </>
       }
     </div>

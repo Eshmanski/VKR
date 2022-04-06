@@ -10,14 +10,14 @@ function Workspace() {
 
   function renderComponent(itemType, itemId) {
     switch(itemType) {
-      case 'product':
-        return <Product itemType={itemType} itemId={itemId}></Product>
-      case 'component':
-        return <Component itemType={itemType} itemId={itemId}></Component>
-      case 'route':
-        return <Route itemType={itemType} itemId={itemId}></Route>
-      case 'workshop':
-        return <Workshop itemType={itemType} itemId={itemId}></Workshop>
+      case 'productData':
+        return <Product itemId={itemId}></Product>
+      case 'componentData':
+        return <Component itemId={itemId}></Component>
+      case 'routeData':
+        return <Route itemId={itemId}></Route>
+      case 'workshopData':
+        return <Workshop itemId={itemId}></Workshop>
       default: 
         return null;
     }

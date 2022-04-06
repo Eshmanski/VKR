@@ -1,13 +1,13 @@
 import { useState, useRef, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { updateWorkshopRoad } from '../../store/actions/dataActions';
+import { updateWorkshopNodePosition } from '../../store/actions/routeDataAction';
 import styles from './WorkshopBox.module.css';
 
-function WorkshopBox({refDisplay, workshop, itemId, itemType, isCreateLine, chooseBox}) {
+function WorkshopBox({refDisplay, workshopNode, itemId, isCreateLine, chooseBox, isActive, isDelete, deleteBox}) {
   const workshopData = useSelector(store => store
-    .data['workshop']
+    .workshopData
     .items
-    .filter(item => item.id === workshop.id))[0];
+    .filter(item => item.id === workshopNode.id))[0];
     
   const [position, setPosition] = useState({x: 0, y: 0});
   const [isDrag, setIsDrag] = useState(false);
@@ -16,9 +16,9 @@ function WorkshopBox({refDisplay, workshop, itemId, itemType, isCreateLine, choo
   const isUpdatePos = useRef(true);
 
   useEffect(() => {
-    setPosition(workshop.position);
+    setPosition(workshopNode.position);
   }, [
-    workshop.position,
+    workshopNode.position,
   ]);
 
   const width = 100;
@@ -34,10 +34,14 @@ function WorkshopBox({refDisplay, workshop, itemId, itemType, isCreateLine, choo
     ? style.pointerEvents='none'
     : style.pointerEvent='';
   
-  isCreateLine
+  isCreateLine || isDelete
     ? style.cursor='pointer'
     : style.cursor='grab';
 
+  isActive
+    ? style.border='1px solid blue'
+    : style.border='1px solid black';
+  
   const switchDrag = () => {
     setIsDrag(true);
 
@@ -49,7 +53,7 @@ function WorkshopBox({refDisplay, workshop, itemId, itemType, isCreateLine, choo
       if(isUpdatePos) {
         isUpdatePos.current = false;
         setTimeout(() => {
-          dispatch(updateWorkshopRoad({itemId, workshop: {id: workshop.id, position: {x, y}}, packType: itemType}));
+          dispatch(updateWorkshopNodePosition({itemId, workshopNodeId: workshopNode.id, position: {x, y}}));
           isUpdatePos.current = true;
         }, 30);
       }
@@ -61,28 +65,27 @@ function WorkshopBox({refDisplay, workshop, itemId, itemType, isCreateLine, choo
     }
   }
 
-
   const renderElement = () => {
-    if(!isCreateLine) {
+    if(!isCreateLine && !isDelete) {
       return <div
-        id={workshop.id}
+        id={workshopNode.id}
         className={styles.workshopBox} 
         style={style} 
         onMouseDown={(e) => {switchDrag(e)}}
         onMouseMove={null}
       >
-        {workshopData.label}
+        {workshopData.title}
       </div>
     } else {
       return <div 
-        id={workshop.id}
-        className={styles.workshopBox} 
+        id={workshopNode.id}
+        className={styles.workshopBox + ' ' + (isCreateLine ? styles.createLine : styles.deleteBox)} 
         style={style} 
         onMouseDown={null}
         onMouseMove={null}
-        onClick={() => chooseBox(workshop.id)}
+        onClick={isCreateLine ? () => chooseBox(workshopNode.id) : () => deleteBox(workshopNode.id)}
       >
-        {workshopData.label}
+        {workshopData.title}
       </div>
     }
   }

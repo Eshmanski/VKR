@@ -4,26 +4,29 @@ import styles from './Sidebar.module.css';
 import nextId from "react-id-generator";
 import CreateItem from '../modals/CreateItem/CreateItem'
 import { useDispatch, useSelector } from 'react-redux';
-import { addItem } from '../../store/actions/dataActions';
 import { setChosenItem } from '../../store/actions/stateProjectActions'
+import { addProductData } from '../../store/actions/productDataActons';
+import { addComponentData } from '../../store/actions/componentDataAction';
+import { addWorkshopData } from '../../store/actions/workshopDataAction';
+import { addRouteData } from '../../store/actions/routeDataAction';
 
 
+const createActions = {
+  productData: addProductData,
+  componentData: addComponentData,
+  workshopData: addWorkshopData,
+  routeData: addRouteData,
+}
 
 function Sidebar() {
-  const [modalOptions, setModalOptions] = useState({
-    isOpen: false,
-    typeData: '',
-  });
-  
-
-  const data = useSelector(store => store.data);
+  const [modalOptions, setModalOptions] = useState({ isOpen: false, typeData: '' });
+  const {productData, componentData, workshopData, routeData} = useSelector(store => store);
   const dispatch = useDispatch();
 
   const addFile = (packType, itemName) => {
     const itemId = nextId(`${packType}-`);
- 
     handleClose();
-    dispatch(addItem({itemId, itemName, packType}));
+    dispatch(createActions[packType]({itemId, itemName}));
     dispatch(setChosenItem({itemId, packType}));
   } 
 
@@ -41,7 +44,7 @@ function Sidebar() {
     <div className={styles.sidebar}>
       <p>Предприятие</p>
       <FolderTree 
-        data={data} 
+        data={{productData, componentData, workshopData, routeData}} 
         onOpen={handleOpen}
       ></FolderTree>
       <CreateItem modalOptions={modalOptions} onAddFile={addFile} onClose={handleClose}></CreateItem>

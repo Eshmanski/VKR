@@ -1,9 +1,9 @@
 export function declinationTitle(key, num) {
   const names = {
-    product: ['Изделия', 'Изделие'],
-    component: ['Детали', 'Деталь'],
-    workshop: ['Цеха', 'Цех'],
-    route: ['Маршрута', 'Маршрут'],
+    productData: ['Изделия', 'Изделие'],
+    componentData: ['Детали', 'Деталь'],
+    workshopData: ['Цеха', 'Цех'],
+    routeData: ['Маршрута', 'Маршрут'],
     default: ['Элемента', 'Элемент']
   }
 

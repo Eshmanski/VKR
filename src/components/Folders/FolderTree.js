@@ -36,7 +36,7 @@ function FolderTree({ data, onOpen}) {
             <div style={{position: 'relative'}} key={key}>
             <div className={styles.addBtn} onClick={() => onOpen(key)}><AddIcon></AddIcon></div>
               <TreeItem nodeId={key} label={data[key].name} onClick={() => clickPackHandler(key)}>
-                {data[key].items.map(item => <TreeItem nodeId={item.id} label={item.label} key={item.id} onClick={() => clickItemHandler(item.id, key)}/>)}
+                {data[key].items.map(item => <TreeItem nodeId={item.id} label={item.title} key={item.id} onClick={() => clickItemHandler(item.id, key)}/>)}
               </TreeItem>
             </div>
         );

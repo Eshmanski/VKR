@@ -2,39 +2,48 @@ import { useState, useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import styles from './Workshop.module.css'
-import { changeBodyWorkshop } from '../../../../store/actions/dataActions';
 import Title from '../../../Title/Title';
+import { deleteWorkshop, updateWorkshopBody } from '../../../../store/actions/workshopDataAction';
+import { clearChosenItem } from '../../../../store/actions/stateProjectActions';
 
 
-function Workshop({itemType, itemId}) {
-  const data = useSelector(store => store.data);
-  const projectItem = data[itemType].items.find((item) => item.id === itemId);
+function Workshop({ itemId }) {
+  const workshopDataItem = useSelector(store => store.workshopData.items.find(item => item.id === itemId));
   const dispatch = useDispatch();
 
-  const [isEditBody, setIsEditBody] = useState(true);
+  const [isEditBody, setIsEditBody] = useState(false);
 
   const [inputName, setInputName] = useState('');
   const [inputDescription, setInputDescription] = useState('');
 
   useEffect(() => {
-    setInputName(projectItem.body.name);
+    setInputName(workshopDataItem.body.name);
 
-    projectItem.body.description 
-      ? setInputDescription(projectItem.body.description)
+    workshopDataItem.body.description 
+      ? setInputDescription(workshopDataItem.body.description)
       : setInputDescription('');
   }, [
-    projectItem.body.name,
-    projectItem.body.description,
+    workshopDataItem.body.name,
+    workshopDataItem.body.description,
   ]);
 
-  const saveBody = () => {
-    dispatch(changeBodyWorkshop({itemId, newBody: {name: inputName, description: inputDescription}, packType: itemType}));
+  useEffect(() => {
     setIsEditBody(false);
+  }, [itemId])
+
+  const saveBody = () => {
+    dispatch(updateWorkshopBody({itemId, newBody: {name: inputName, description: inputDescription}}));
+    setIsEditBody(false);
+  }
+
+  const deleteItem = () => {
+    dispatch(clearChosenItem());
+    dispatch(deleteWorkshop({itemId}));
   }
 
   return (
     <div className={styles.info}>
-      <Title projectItem={projectItem} itemId={itemId} itemType={itemType}></Title>
+      <Title projectItem={workshopDataItem} itemId={itemId} itemType={'workshopData'}></Title>
 
       <table>
         <tbody>
@@ -63,13 +72,16 @@ function Workshop({itemType, itemId}) {
           </tr>
         </tbody>
       </table>
-      {isEditBody || <Button onClick={() => setIsEditBody(true)} sx={{margin:'10px'}} color="secondary" variant="contained">Редактировать</Button>}
-      {isEditBody && 
-        <>
-          <Button onClick={() => setIsEditBody(false)} sx={{margin:'10px'}} color="error" variant="contained">Отменить</Button>
-          <Button onClick={saveBody} sx={{margin:'10px'}} color="success" variant="contained">Сохранить</Button>
-        </>
-      }
+      <div className={styles.btnList}>
+        {isEditBody || <Button onClick={() => setIsEditBody(true)} sx={{margin:'10px'}} color="secondary" variant="contained">Редактировать</Button>}
+        {isEditBody && 
+          <div>
+            <Button onClick={() => setIsEditBody(false)} sx={{margin:'10px'}} color="error" variant="contained">Отменить</Button>
+            <Button onClick={saveBody} sx={{margin:'10px'}} color="success" variant="contained">Сохранить</Button>
+          </div>
+        }
+        <Button onClick={() => deleteItem()} sx={{margin:'10px'}} color="error" variant="contained">Удалить</Button>
+      </div>
     </div>
   )
 }

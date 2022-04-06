@@ -8,18 +8,18 @@
   text-align: left;
 }
 
-.label, .inputLabel {
+.title, .inputTitle {
   padding: 5px;
   
   margin-left: 5px;
   overflow: hidden;
 }
 
-.label {
+.title {
   font-weight: bold;
 }
 
-.inputLabel {
+.inputTitle {
   font-size: 20px;
   border: none;
   outline: none;
