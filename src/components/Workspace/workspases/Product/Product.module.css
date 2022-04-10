@@ -1,5 +1,5 @@
 .info {
-  width: 600px;
+  width: 700px;
   /* border: 1px dashed black; */
   margin: auto;
   text-align: left;
@@ -58,6 +58,74 @@ textarea {
 
 .inputBox {
   padding: 5px;
+}
+
+.inputBox.link {
+  cursor: pointer;
+}
+
+.inputBox.link:hover {
+  color: blue;
+}
+
+
+.componentCard {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.componentBox {
+  flex-grow: 3;
+  position: relative;
+  border: 1px solid rgb(124, 124, 124);
+  border-radius: 2px;
+  padding: 5px;
+  margin-bottom: 5px;
+}
+
+.componentRed {
+  background-color: white;
+}
+
+.componentBox:last-child {
+  margin-bottom: 0px;
+}
+
+.componentBox.link {
+  cursor: pointer;
+}
+
+.componentBox.link:hover {
+  color: blue;
+  border: 1px solid blue;
+}
+
+.clearIcon {
+  background-color: white;
+  border: 1px solid rgb(124, 124, 124);
+  margin-left: 2px;
+  text-align: center;
+  margin-bottom: 5px;
+}
+.clearIcon:hover {
+  color: red;
+  cursor: pointer;
+}
+
+
+
+.addWrapper {
+  text-align: center;
+}
+
+.addBotton {
+  font-size: 35px;
+}
+
+.addBotton:hover {
+  color: blue;
+  cursor: pointer;
 }
 
 .editIcon {

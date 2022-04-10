@@ -1,9 +1,9 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import styles from './Component.module.css'
 import Title from '../../../Title/Title';
-import { clearChosenItem, setBodyChanging } from '../../../../store/actions/stateProjectActions';
+import { clearChosenItem, setBodyChanging, setChosenItem } from '../../../../store/actions/stateProjectActions';
 import { deleteComponent, updateComponentBody } from '../../../../store/actions/componentDataAction';
 
 
@@ -19,25 +19,36 @@ function Component({itemId}) {
   const [inputRouteId, setInputRouteId] = useState('');
   const [inputDescription, setInputDescription] = useState('');
 
-  const fillField = () => {
+  const fillField = useCallback(() => {
     setInputName(productDataItem.body.name);
     setInputDrawing(productDataItem.body.drawing);
     setInputRouteId(productDataItem.body.routeId);
     setInputDescription(productDataItem.body.description);
-  }
+  }, [
+    productDataItem.body.name,
+    productDataItem.body.drawing,
+    productDataItem.body.routeId,
+    productDataItem.body.description,
+  ])
 
   useEffect(() => {
     fillField();
   }, [
-    productDataItem.body
+    fillField,
   ]);
+
+  const handleMoveTo = (itemId, packType) => {
+    dispatch(setChosenItem({itemId, packType}));
+  }
 
   const saveBody = () => {
     dispatch(updateComponentBody({itemId, newBody: {name: inputName, drawing: inputDrawing, routeId: inputRouteId, description: inputDescription}}));
+    dispatch(setBodyChanging(false));
     setIsEditBody(false);
   }
 
   const deleteItem = () => {
+    dispatch(setBodyChanging(false));
     dispatch(clearChosenItem());
     dispatch(deleteComponent({itemId}));
   }
@@ -67,7 +78,7 @@ function Component({itemId}) {
       <table>
         <tbody>
           <tr>
-            <td>Наименование цеха</td>
+            <td>Наименование детали</td>
             <td>
               {isEditBody || <div className={styles.inputBox}>{inputName}</div>}
               {isEditBody && <input className={styles.hiddenInput} type="text" onChange={(event)=>setInputName(event.target.value)} value={inputName}/>}       
@@ -83,7 +94,14 @@ function Component({itemId}) {
           <tr>
             <td>Маршрут</td>
             <td>
-              {isEditBody || <div className={styles.inputBox}>{routeDataItems.find(item=>item.id===inputRouteId)?.title || ''}</div>}
+              {isEditBody || 
+                <div 
+                  onClick={inputRouteId ? () => handleMoveTo(inputRouteId, 'routeData') : null} 
+                  className={styles.inputBox + ' ' + styles.link}
+                >
+                  {routeDataItems.find(item=>item.id===inputRouteId)?.title || ''}
+                </div>
+              }
               {isEditBody && <select className={styles.hiddenSelect} value={inputRouteId} onChange={(e) => setInputRouteId(e.target.value)}>
                 <option value=''></option>
                 {routeDataItems.map(item => <option key={item.id} value={item.id}>{item.title}</option>)}
@@ -91,7 +109,7 @@ function Component({itemId}) {
             </td>
           </tr>
           <tr >
-            <td>Описание</td>
+            <td className='top'>Описание</td>
             <td>
               <textarea
                 className={styles.description}

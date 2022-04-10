@@ -1,15 +1,19 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import styles from './Product.module.css'
 import Title from '../../../Title/Title';
-import { clearChosenItem, setBodyChanging } from '../../../../store/actions/stateProjectActions';
+import AddIcon from '@mui/icons-material/Add';
+import { clearChosenItem, setBodyChanging, setChosenItem } from '../../../../store/actions/stateProjectActions';
 import { deleteProduct, updateProductBody } from '../../../../store/actions/productDataActons';
+import ChooseComponent from '../../../modals/ChooseComponent/ChooseComponent';
+import ClearIcon from '@mui/icons-material/Clear';
 
 
-function Prodyct({itemId}) {
+function Product({itemId}) {
   const productDataItem = useSelector(store => store.productData.items.find(item => item.id === itemId));
   const routeDataItems = useSelector(store => store.routeData.items);
+  const componentDataItems = useSelector(store => store.componentData.items);
   const dispatch = useDispatch();
 
   const [isEditBody, setIsEditBody] = useState(false);
@@ -17,27 +21,52 @@ function Prodyct({itemId}) {
   const [inputName, setInputName] = useState('');
   const [inputDrawing, setInputDrawing] = useState('');
   const [inputRouteId, setInputRouteId] = useState('');
+  const [inputComponentsId, setInputComponentsId] = useState([]);
   const [inputDescription, setInputDescription] = useState('');
 
-  const fillField = () => {
+  const [showChooseComponent, setShowChooseComponent] = useState(false);
+
+  const fillField = useCallback(() => {
     setInputName(productDataItem.body.name);
     setInputDrawing(productDataItem.body.drawing);
     setInputRouteId(productDataItem.body.routeId);
+    setInputComponentsId(productDataItem.body.componentsId);
     setInputDescription(productDataItem.body.description);
-  }
+  }, [
+    productDataItem.body.name,
+    productDataItem.body.drawing,
+    productDataItem.body.routeId,
+    productDataItem.body.componentsId,
+    productDataItem.body.description
+  ]);
 
   useEffect(() => {
     fillField();
   }, [
-    productDataItem.body
+    fillField
   ]);
 
+  const handleMoveTo = (itemId, packType) => {
+    dispatch(setChosenItem({itemId, packType}));
+  }
+
   const saveBody = () => {
-    dispatch(updateProductBody({itemId, newBody: {name: inputName, drawing: inputDrawing, routeId: inputRouteId, description: inputDescription}}));
+    dispatch(updateProductBody({
+      itemId, 
+      newBody: {
+        name: inputName, 
+        drawing: inputDrawing, 
+        routeId: inputRouteId,
+        componentsId: inputComponentsId,
+        description: inputDescription
+      }
+    }));
+    dispatch(setBodyChanging(false));
     setIsEditBody(false);
   }
 
   const deleteItem = () => {
+    dispatch(setBodyChanging(false));
     dispatch(clearChosenItem());
     dispatch(deleteProduct({itemId}));
   }
@@ -51,6 +80,15 @@ function Prodyct({itemId}) {
     dispatch(setBodyChanging(false));
     fillField();
     setIsEditBody(false);
+  }
+
+  const onAddComponent = (id) => {
+    setInputComponentsId([...inputComponentsId, id]);
+    setShowChooseComponent(false);
+  }
+
+  const removeComponent = (id) => {
+    setInputComponentsId(inputComponentsId.filter(componentId => componentId !== id));
   }
 
   useEffect(() => {
@@ -67,12 +105,13 @@ function Prodyct({itemId}) {
       <table>
         <tbody>
           <tr>
-            <td>Наименование цеха</td>
+            <td>Наименование изделия</td>
             <td>
               {isEditBody || <div className={styles.inputBox}>{inputName}</div>}
               {isEditBody && <input className={styles.hiddenInput} type="text" onChange={(event)=>setInputName(event.target.value)} value={inputName}/>}       
             </td>
           </tr>
+
           <tr>
             <td>Чертеж</td>
             <td>
@@ -80,18 +119,65 @@ function Prodyct({itemId}) {
               {isEditBody && <input className={styles.hiddenInput} type="text" onChange={(event)=>setInputDrawing(event.target.value)} value={inputDrawing}/>}  
             </td>
           </tr>
+
           <tr>
             <td>Маршрут</td>
             <td>
-              {isEditBody || <div className={styles.inputBox}>{routeDataItems.find(item=>item.id === inputRouteId)?.title}</div>}
+              {isEditBody || 
+                <div
+                  onClick={inputRouteId ? () => handleMoveTo(inputRouteId, 'routeData') : null} 
+                  className={styles.inputBox + ' ' + styles.link}
+                >
+                  {routeDataItems.find(item=>item.id === inputRouteId)?.title}
+                </div>
+              }
               {isEditBody && <select className={styles.hiddenSelect} value={inputRouteId} onChange={(e) => setInputRouteId(e.target.value)}>
                 <option value=''></option>
                 {routeDataItems.map(item => <option key={item.id} value={item.id}>{item.title}</option>)}
               </select>}  
             </td>
           </tr>
+
+          <tr>
+            <td className='top'>Детали</td>
+            <td>
+              {isEditBody || 
+                <>
+                  {inputComponentsId.map((id) =>
+                    <div 
+                      key={id}
+                      onClick={inputRouteId ? () => handleMoveTo(id, 'componentData') : null}
+                      className={styles.componentBox + ' ' + styles.link}
+                    >
+                      {componentDataItems.find(item=>item.id === id)?.title}
+                    </div>     
+                  )}
+                </>
+              }
+              {isEditBody && 
+                <>
+                  {inputComponentsId.map((id) =>
+                    <div className={styles.componentCard} key={id}>
+                      <div 
+                        className={styles.componentBox + ' ' + styles.componentRed}
+                      >
+                        {componentDataItems.find(item=>item.id === id)?.title}
+                      </div>
+                      <div className={styles.clearIcon}>
+                          <ClearIcon onClick={() => removeComponent(id)} sx={{textAlign: 'center', marginTop: '3px'}}></ClearIcon>
+                      </div>
+                    </div>
+                  )}
+                  <div className={styles.addWrapper}>
+                    <AddIcon onClick={() => setShowChooseComponent(true)} className={styles.addBotton}></AddIcon>
+                  </div>
+                </>
+              }  
+            </td>
+          </tr>
+
           <tr >
-            <td>Описание</td>
+            <td className='top'>Описание</td>
             <td>
               <textarea
                 className={styles.description}
@@ -100,7 +186,6 @@ function Prodyct({itemId}) {
                 value={inputDescription} 
               />
             </td>
-
           </tr>
         </tbody>
       </table>
@@ -114,8 +199,15 @@ function Prodyct({itemId}) {
         }
         <Button onClick={() => deleteItem()} sx={{margin:'10px'}} color="error" variant="contained">Удалить</Button>
       </div>
+
+      <ChooseComponent 
+        isOpen={showChooseComponent}
+        onClose={() => setShowChooseComponent(false)}
+        onAddComponent={onAddComponent}
+        componentItems={componentDataItems}
+      ></ChooseComponent>
     </div>
-  )
+  );
 }
 
-export default Prodyct;
+export default Product;

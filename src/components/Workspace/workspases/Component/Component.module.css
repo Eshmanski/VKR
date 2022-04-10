@@ -1,5 +1,5 @@
 .info {
-  width: 600px;
+  width: 700px;
   /* border: 1px dashed black; */
   margin: auto;
   text-align: left;
@@ -58,6 +58,14 @@ textarea {
 
 .inputBox {
   padding: 5px;
+}
+
+.inputBox.link {
+  cursor: pointer;
+}
+
+.inputBox.link:hover {
+  color: blue;
 }
 
 .editIcon {

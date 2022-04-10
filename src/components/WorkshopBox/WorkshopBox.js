@@ -1,25 +1,17 @@
-import { useState, useRef, useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
-import { updateWorkshopNodePosition } from '../../store/actions/routeDataAction';
+import { useRef } from 'react';
+import { useSelector } from 'react-redux';
+
 import styles from './WorkshopBox.module.css';
 
-function WorkshopBox({refDisplay, workshopNode, itemId, isCreateLine, chooseBox, isActive, isDelete, deleteBox}) {
+function WorkshopBox({refDisplay, workshopNode, isCreateLine, chooseBox, isActive, isDelete, deleteBox, updatePosition}) {
   const workshopData = useSelector(store => store
     .workshopData
     .items
     .filter(item => item.id === workshopNode.id))[0];
     
-  const [position, setPosition] = useState({x: 0, y: 0});
-  const [isDrag, setIsDrag] = useState(false);
-  const dispatch = useDispatch();
 
+  const position = workshopNode.position;
   const isUpdatePos = useRef(true);
-
-  useEffect(() => {
-    setPosition(workshopNode.position);
-  }, [
-    workshopNode.position,
-  ]);
 
   const width = 100;
   const height = 40;
@@ -30,10 +22,6 @@ function WorkshopBox({refDisplay, workshopNode, itemId, isCreateLine, chooseBox,
     height: height,
   }
   
-  isDrag 
-    ? style.pointerEvents='none'
-    : style.pointerEvent='';
-  
   isCreateLine || isDelete
     ? style.cursor='pointer'
     : style.cursor='grab';
@@ -43,8 +31,6 @@ function WorkshopBox({refDisplay, workshopNode, itemId, isCreateLine, chooseBox,
     : style.border='1px solid black';
   
   const switchDrag = () => {
-    setIsDrag(true);
-
     refDisplay.current.onmousemove = (e) => {
       e.stopPropagation();  
       const x = e.pageX - e.currentTarget.getBoundingClientRect().left;
@@ -53,15 +39,14 @@ function WorkshopBox({refDisplay, workshopNode, itemId, isCreateLine, chooseBox,
       if(isUpdatePos) {
         isUpdatePos.current = false;
         setTimeout(() => {
-          dispatch(updateWorkshopNodePosition({itemId, workshopNodeId: workshopNode.id, position: {x, y}}));
+          updatePosition(workshopNode.id, {x, y});
           isUpdatePos.current = true;
-        }, 30);
+        }, 20);
       }
     }
 
     refDisplay.current.onmouseup = () => {
       refDisplay.current.onmousemove = null;
-      setIsDrag(false);
     }
   }
 

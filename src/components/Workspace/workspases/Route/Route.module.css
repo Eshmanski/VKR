@@ -23,6 +23,10 @@
   box-shadow:  inset 0px 0px 10px 4px #c3c3c3;
 }
 
+.displayWrapper {
+  position: relative;
+}
+
 .supportText {
   position: absolute;
   top: 0;

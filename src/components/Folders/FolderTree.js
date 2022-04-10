@@ -40,8 +40,6 @@ function FolderTree({ data, onOpen }) {
     }
   }
 
-  console.log(isBodyChanging)
-
   return (
     <>
     <TreeView

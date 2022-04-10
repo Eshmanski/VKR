@@ -6,6 +6,7 @@
   border: 1px solid black;
   z-index: 999;
   cursor: grab;
+  user-select: none;
 }
 
 .deleteBox:hover {

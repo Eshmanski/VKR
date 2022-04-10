@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import styles from './Workshop.module.css'
@@ -17,24 +17,28 @@ function Workshop({ itemId }) {
   const [inputName, setInputName] = useState('');
   const [inputDescription, setInputDescription] = useState('');
 
-  const fillField = () => {
+  const fillField = useCallback(() => {
     setInputName(workshopDataItem.body.name);
     setInputDescription(workshopDataItem.body.description);
-  }
+  }, [
+    workshopDataItem.body.name,
+    workshopDataItem.body.description
+  ]);
 
   useEffect(() => {
     fillField();
   }, [
-    workshopDataItem.body.name,
-    workshopDataItem.body.description,
+    fillField
   ]);
 
   const saveBody = () => {
     dispatch(updateWorkshopBody({itemId, newBody: {name: inputName, description: inputDescription}}));
+    dispatch(setBodyChanging(false));
     removeChange();
   }
 
   const deleteItem = () => {
+    dispatch(setBodyChanging(false));
     dispatch(clearChosenItem());
     dispatch(deleteWorkshop({itemId}));
   }
@@ -74,7 +78,7 @@ function Workshop({ itemId }) {
           </tr>
           <tr >
 
-            <td>Описание</td>
+            <td className='top'>Описание</td>
             <td>
               <textarea
                 className={styles.description}
