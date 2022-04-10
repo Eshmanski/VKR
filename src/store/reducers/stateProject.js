@@ -1,10 +1,13 @@
 import { copyObject } from '../../shared/utils';
-import { CLEAR_CHOSEN_ITEM, SET_CHOSEN_ITEM, TOGGLE_PACK } from "../actions/actionsTypes";
+import { CLEAR_CHOSEN_ITEM, SET_BODY_CHANGING, SET_CHOSEN_ITEM, TOGGLE_PACK } from "../actions/actionsTypes";
 
 const initialState = {
   chosenPacks: ['routeData'],
   chosenItemId: 'route-999',
   chosenType: 'routeData',
+  isBodyChanging: false,
+  isShowSaveAlert: false,
+  saveBody: null,
 }
 
 export default function stateProjectReducer(state = initialState, action) {
@@ -15,6 +18,8 @@ export default function stateProjectReducer(state = initialState, action) {
       return togglePack(state, action.payload);
     case CLEAR_CHOSEN_ITEM:
       return clearChosenItem(state);
+    case SET_BODY_CHANGING:
+      return setBodyChanging(state, action.payload);
     default:
       return state;
   }
@@ -39,4 +44,8 @@ function clearChosenItem(state) {
   newState.chosenType = '';
 
   return newState;
+}
+
+function setBodyChanging(state, {isChanging}) {
+  return { ...state, isBodyChanging: isChanging };
 }

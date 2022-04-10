@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import styles from './Component.module.css'
 import Title from '../../../Title/Title';
-import { clearChosenItem } from '../../../../store/actions/stateProjectActions';
+import { clearChosenItem, setBodyChanging } from '../../../../store/actions/stateProjectActions';
 import { deleteComponent, updateComponentBody } from '../../../../store/actions/componentDataAction';
 
 
@@ -19,18 +19,18 @@ function Component({itemId}) {
   const [inputRouteId, setInputRouteId] = useState('');
   const [inputDescription, setInputDescription] = useState('');
 
-  useEffect(() => {
+  const fillField = () => {
     setInputName(productDataItem.body.name);
     setInputDrawing(productDataItem.body.drawing);
     setInputRouteId(productDataItem.body.routeId);
     setInputDescription(productDataItem.body.description);
+  }
+
+  useEffect(() => {
+    fillField();
   }, [
     productDataItem.body
   ]);
-
-  useEffect(() => {
-    setIsEditBody(false);
-  }, [itemId])
 
   const saveBody = () => {
     dispatch(updateComponentBody({itemId, newBody: {name: inputName, drawing: inputDrawing, routeId: inputRouteId, description: inputDescription}}));
@@ -41,6 +41,24 @@ function Component({itemId}) {
     dispatch(clearChosenItem());
     dispatch(deleteComponent({itemId}));
   }
+
+  const switchChange = () => {
+    dispatch(setBodyChanging(true));
+    setIsEditBody(true);
+  }
+
+  const removeChange = () => {
+    dispatch(setBodyChanging(false));
+    fillField();
+    setIsEditBody(false);
+  }
+
+  useEffect(() => {
+    setIsEditBody(false);
+  }, [itemId]);
+
+  window.addEventListener('saveBody', saveBody);
+  window.addEventListener('removeChange', removeChange);
 
   return (
     <div className={styles.info}>
@@ -87,10 +105,10 @@ function Component({itemId}) {
         </tbody>
       </table>
       <div className={styles.btnList}>
-        {isEditBody || <Button onClick={() => setIsEditBody(true)} sx={{margin:'10px'}} color="secondary" variant="contained">Редактировать</Button>}
+        {isEditBody || <Button onClick={() => switchChange()} sx={{margin:'10px'}} color="secondary" variant="contained">Редактировать</Button>}
         {isEditBody && 
           <div>
-            <Button onClick={() => setIsEditBody(false)} sx={{margin:'10px'}} color="error" variant="contained">Отменить</Button>
+            <Button onClick={() => removeChange()} sx={{margin:'10px'}} color="error" variant="contained">Отменить</Button>
             <Button onClick={saveBody} sx={{margin:'10px'}} color="success" variant="contained">Сохранить</Button>
           </div>
         }

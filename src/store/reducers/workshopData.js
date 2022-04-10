@@ -23,7 +23,7 @@ export default function workshopDataReducer(state = initialState, action) {
 
 function addNewWorkshop(state, {itemId, itemName}) {
   const newItems = state.items.concat();
-  newItems.push({id: itemId, title: itemName, body: { name: itemName }});
+  newItems.push({id: itemId, title: itemName, body: { name: itemName, description: '' }});
   return {...state, items: newItems};
 }
 
