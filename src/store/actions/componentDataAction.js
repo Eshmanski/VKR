@@ -14,14 +14,11 @@ export function addComponentData({_, itemName}) {
     });
     const data = await res.json();
 
-    console.log(data);
     dispatch({type: ADD_COMPONENT_DATA, payload: {itemId: data.name, itemName}});
 
     dispatch(setChosenItem({itemId: data.name, packType: 'componentData'}));
-    
-    dispatch(fetchEnd());
 
-    
+    dispatch(fetchEnd());
   }
 }
 
