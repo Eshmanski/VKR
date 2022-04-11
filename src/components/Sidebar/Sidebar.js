@@ -27,7 +27,7 @@ function Sidebar() {
     const itemId = nextId(`${packType}-`);
     handleClose();
     dispatch(createActions[packType]({itemId, itemName}));
-    dispatch(setChosenItem({itemId, packType}));
+    // dispatch(setChosenItem({itemId, packType}));
   } 
 
   const handleOpen = (typeData) => setModalOptions({
