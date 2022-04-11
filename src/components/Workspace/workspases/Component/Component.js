@@ -20,6 +20,7 @@ function Component({itemId}) {
   const [inputDescription, setInputDescription] = useState('');
 
   const fillField = useCallback(() => {
+    console.log(productDataItem)
     setInputName(productDataItem.body.name);
     setInputDrawing(productDataItem.body.drawing);
     setInputRouteId(productDataItem.body.routeId);

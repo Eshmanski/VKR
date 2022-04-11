@@ -1,5 +1,5 @@
 import { copyObject } from '../../shared/utils';
-import { CLEAR_CHOSEN_ITEM, SET_BODY_CHANGING, SET_CHOSEN_ITEM, TOGGLE_PACK } from "../actions/actionsTypes";
+import { CLEAR_CHOSEN_ITEM, FETCH_END, FETCH_START, SET_BODY_CHANGING, SET_CHOSEN_ITEM, TOGGLE_PACK } from "../actions/actionsTypes";
 
 const initialState = {
   chosenPacks: ['routeData'],
@@ -8,6 +8,7 @@ const initialState = {
   isBodyChanging: false,
   isShowSaveAlert: false,
   saveBody: null,
+  fetching: false,
 }
 
 export default function stateProjectReducer(state = initialState, action) {
@@ -20,6 +21,10 @@ export default function stateProjectReducer(state = initialState, action) {
       return clearChosenItem(state);
     case SET_BODY_CHANGING:
       return setBodyChanging(state, action.payload);
+    case FETCH_START:
+      return {...state, fetching: true};
+    case FETCH_END:
+      return {...state, fetching: false};
     default:
       return state;
   }

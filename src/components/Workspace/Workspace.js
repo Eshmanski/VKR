@@ -6,7 +6,7 @@ import Workshop from './workspases/Workshop/Workshop';
 import styles from './Workspace.module.css';
 
 function Workspace() {
-  const { chosenType, chosenItemId } = useSelector(store => store.stateProject);
+  const { chosenType, chosenItemId, fetching } = useSelector(store => store.stateProject);
 
   function renderComponent(itemType, itemId) {
     switch(itemType) {
@@ -25,7 +25,7 @@ function Workspace() {
 
   return (
     <div className={styles.workspace}>
-      {renderComponent(chosenType, chosenItemId)}
+      {!fetching && renderComponent(chosenType, chosenItemId)}
     </div>
   )
 }
