@@ -1,5 +1,5 @@
 import { copyObject } from '../../shared/utils';
-import { ADD_PRODUCT_DATA, DELETE_PRODUCT, UPDATE_PRODUCT_BODY, UPDATE_PRODUCT_TITLE } from '../actions/actionsTypes';
+import { ADD_PRODUCT_DATA, DELETE_PRODUCT, SET_LOADED_PRODUCT, UPDATE_PRODUCT_BODY, UPDATE_PRODUCT_TITLE } from '../actions/actionsTypes';
 
 const initialState = {
   name: 'Изделия',
@@ -8,6 +8,8 @@ const initialState = {
 
 export default function productDataReducer(state = initialState, action) {
   switch(action.type) {
+    case SET_LOADED_PRODUCT:
+      return action.payload;
     case ADD_PRODUCT_DATA:
       return addNewProduct(state, action.payload);
     case UPDATE_PRODUCT_TITLE:

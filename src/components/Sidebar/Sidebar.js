@@ -4,7 +4,6 @@ import styles from './Sidebar.module.css';
 import nextId from "react-id-generator";
 import CreateItem from '../modals/CreateItem/CreateItem'
 import { useDispatch, useSelector } from 'react-redux';
-import { setChosenItem } from '../../store/actions/stateProjectActions'
 import { addProductData } from '../../store/actions/productDataActons';
 import { addComponentData } from '../../store/actions/componentDataAction';
 import { addWorkshopData } from '../../store/actions/workshopDataAction';
@@ -27,7 +26,6 @@ function Sidebar() {
     const itemId = nextId(`${packType}-`);
     handleClose();
     dispatch(createActions[packType]({itemId, itemName}));
-    // dispatch(setChosenItem({itemId, packType}));
   } 
 
   const handleOpen = (typeData) => setModalOptions({
@@ -44,7 +42,7 @@ function Sidebar() {
     <div className={styles.sidebar}>
       <p>Предприятие</p>
       <FolderTree 
-        data={{productData, componentData, workshopData, routeData}} 
+        data={{productData, componentData, routeData, workshopData}} 
         onOpen={handleOpen}
       ></FolderTree>
       <CreateItem modalOptions={modalOptions} onAddFile={addFile} onClose={handleClose}></CreateItem>

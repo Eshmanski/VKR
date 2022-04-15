@@ -1,137 +1,107 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import styles from './Product.module.css'
 import Title from '../../../Title/Title';
 import AddIcon from '@mui/icons-material/Add';
-import { clearChosenItem, setBodyChanging, setChosenItem } from '../../../../store/actions/stateProjectActions';
-import { deleteProduct, updateProductBody } from '../../../../store/actions/productDataActons';
+import { changeBodyItem, deleteChosenItem, returnBodyItem, saveBodyItem, setBodyChanging, setChosenItem } from '../../../../store/actions/stateProjectActions';
+
 import ChooseComponent from '../../../modals/ChooseComponent/ChooseComponent';
 import ClearIcon from '@mui/icons-material/Clear';
 
 
-function Product({itemId}) {
-  const productDataItem = useSelector(store => store.productData.items.find(item => item.id === itemId));
+function Product() {
+  const { chosenItem, isBodyChanging } = useSelector(store => store.stateProject);
   const routeDataItems = useSelector(store => store.routeData.items);
   const componentDataItems = useSelector(store => store.componentData.items);
+
   const dispatch = useDispatch();
 
-  const [isEditBody, setIsEditBody] = useState(false);
-
-  const [inputName, setInputName] = useState('');
-  const [inputDrawing, setInputDrawing] = useState('');
-  const [inputRouteId, setInputRouteId] = useState('');
-  const [inputComponentsId, setInputComponentsId] = useState([]);
-  const [inputDescription, setInputDescription] = useState('');
-
-  const [showChooseComponent, setShowChooseComponent] = useState(false);
-
-  const fillField = useCallback(() => {
-    setInputName(productDataItem.body.name);
-    setInputDrawing(productDataItem.body.drawing);
-    setInputRouteId(productDataItem.body.routeId);
-    setInputComponentsId(productDataItem.body.componentsId);
-    setInputDescription(productDataItem.body.description);
-  }, [
-    productDataItem.body.name,
-    productDataItem.body.drawing,
-    productDataItem.body.routeId,
-    productDataItem.body.componentsId,
-    productDataItem.body.description
-  ]);
-
-  useEffect(() => {
-    fillField();
-  }, [
-    fillField
-  ]);
+  const changeField = (key, value) => {
+    dispatch(changeBodyItem({...chosenItem.body, [key]: value}));
+  }
 
   const handleMoveTo = (itemId, packType) => {
     dispatch(setChosenItem({itemId, packType}));
   }
 
-  const saveBody = () => {
-    dispatch(updateProductBody({
-      itemId, 
-      newBody: {
-        name: inputName, 
-        drawing: inputDrawing, 
-        routeId: inputRouteId,
-        componentsId: inputComponentsId,
-        description: inputDescription
-      }
-    }));
-    dispatch(setBodyChanging(false));
-    setIsEditBody(false);
-  }
-
-  const deleteItem = () => {
-    dispatch(setBodyChanging(false));
-    dispatch(clearChosenItem());
-    dispatch(deleteProduct({itemId}));
-  }
-
   const switchChange = () => {
     dispatch(setBodyChanging(true));
-    setIsEditBody(true);
+  }
+
+  const saveBody = () => {
+    dispatch(saveBodyItem());
   }
 
   const removeChange = () => {
-    dispatch(setBodyChanging(false));
-    fillField();
-    setIsEditBody(false);
+    dispatch(returnBodyItem());
   }
 
+  const deleteItem = () => {
+    dispatch(deleteChosenItem());
+  }
+
+
+  const itemId = chosenItem.id;
+  const { name, drawing, routeId, componentsId, description } = chosenItem.body;
+
+  const [showChooseComponent, setShowChooseComponent] = useState(false);
+
   const onAddComponent = (id) => {
-    setInputComponentsId([...inputComponentsId, id]);
+    changeField('componentsId', [...componentsId, id]);
     setShowChooseComponent(false);
   }
 
   const removeComponent = (id) => {
-    setInputComponentsId(inputComponentsId.filter(componentId => componentId !== id));
+    changeField('componentsId', componentsId.filter(componentId => componentId !== id));
   }
 
-  useEffect(() => {
-    setIsEditBody(false);
-  }, [itemId])
-
-  window.addEventListener('saveBody', saveBody);
-  window.addEventListener('removeChange', removeChange);
 
   return (
     <div className={styles.info}>
-      <Title projectItem={productDataItem} itemId={itemId} itemType={'productData'}></Title>
+      <Title projectItem={chosenItem} itemId={itemId} itemType={'productData'}></Title>
 
       <table>
         <tbody>
           <tr>
             <td>Наименование изделия</td>
             <td>
-              {isEditBody || <div className={styles.inputBox}>{inputName}</div>}
-              {isEditBody && <input className={styles.hiddenInput} type="text" onChange={(event)=>setInputName(event.target.value)} value={inputName}/>}       
+              {isBodyChanging || <div className={styles.inputBox}>{name}</div>}
+              {isBodyChanging && 
+                <input 
+                  className={styles.hiddenInput} 
+                  type="text" 
+                  onChange={(e)=>changeField('name', e.target.value)} 
+                  value={name}
+                />}       
             </td>
           </tr>
 
           <tr>
             <td>Чертеж</td>
             <td>
-              {isEditBody || <div className={styles.inputBox}>{inputDrawing}</div>}
-              {isEditBody && <input className={styles.hiddenInput} type="text" onChange={(event)=>setInputDrawing(event.target.value)} value={inputDrawing}/>}  
+              {isBodyChanging || <div className={styles.inputBox}>{drawing}</div>}
+              {isBodyChanging && 
+                <input 
+                  className={styles.hiddenInput} 
+                  type="text" 
+                  onChange={(e)=>changeField('drawing', e.target.value)} 
+                  value={drawing}/>}  
             </td>
           </tr>
 
           <tr>
             <td>Маршрут</td>
             <td>
-              {isEditBody || 
+              {isBodyChanging || 
                 <div
-                  onClick={inputRouteId ? () => handleMoveTo(inputRouteId, 'routeData') : null} 
+                  onClick={routeId ? () => handleMoveTo(routeId, 'routeData') : null} 
                   className={styles.inputBox + ' ' + styles.link}
                 >
-                  {routeDataItems.find(item=>item.id === inputRouteId)?.title}
+                  {routeDataItems.find(item=>item.id === routeId)?.title}
                 </div>
               }
-              {isEditBody && <select className={styles.hiddenSelect} value={inputRouteId} onChange={(e) => setInputRouteId(e.target.value)}>
+              {isBodyChanging && <select className={styles.hiddenSelect} value={routeId} onChange={(e) => changeField('routeId', e.target.value)}>
                 <option value=''></option>
                 {routeDataItems.map(item => <option key={item.id} value={item.id}>{item.title}</option>)}
               </select>}  
@@ -141,12 +111,12 @@ function Product({itemId}) {
           <tr>
             <td className='top'>Детали</td>
             <td>
-              {isEditBody || 
+              {isBodyChanging || 
                 <>
-                  {inputComponentsId.map((id) =>
+                  {componentsId.map((id) =>
                     <div 
                       key={id}
-                      onClick={inputRouteId ? () => handleMoveTo(id, 'componentData') : null}
+                      onClick={() => handleMoveTo(id, 'componentData')}
                       className={styles.componentBox + ' ' + styles.link}
                     >
                       {componentDataItems.find(item=>item.id === id)?.title}
@@ -154,9 +124,9 @@ function Product({itemId}) {
                   )}
                 </>
               }
-              {isEditBody && 
+              {isBodyChanging && 
                 <>
-                  {inputComponentsId.map((id) =>
+                  {componentsId.map((id) =>
                     <div className={styles.componentCard} key={id}>
                       <div 
                         className={styles.componentBox + ' ' + styles.componentRed}
@@ -181,17 +151,17 @@ function Product({itemId}) {
             <td>
               <textarea
                 className={styles.description}
-                type="text-area" disabled={!isEditBody}
-                onChange={(e)=>setInputDescription(e.target.value)}
-                value={inputDescription} 
+                type="text-area" disabled={!isBodyChanging}
+                onChange={(e)=>changeField('description', e.target.value)}
+                value={description} 
               />
             </td>
           </tr>
         </tbody>
       </table>
       <div className={styles.btnList}>
-        {isEditBody || <Button onClick={() => switchChange()} sx={{margin:'10px'}} color="secondary" variant="contained">Редактировать</Button>}
-        {isEditBody && 
+        {isBodyChanging || <Button onClick={() => switchChange()} sx={{margin:'10px'}} color="secondary" variant="contained">Редактировать</Button>}
+        {isBodyChanging && 
           <div>
             <Button onClick={() => removeChange()} sx={{margin:'10px'}} color="error" variant="contained">Отменить</Button>
             <Button onClick={saveBody} sx={{margin:'10px'}} color="success" variant="contained">Сохранить</Button>

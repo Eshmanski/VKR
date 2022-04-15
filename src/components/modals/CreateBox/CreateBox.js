@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Modal, Typography, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { styleModal } from '../../../shared/stylesMUI';
 
-function CreateBox({modalOptions, onAddBox, onClose, workshopItems}) {
+function CreateBox({isOpen, onAddBox, onClose, workshopItems}) {
   const [text, setText] = useState('');
 
   const handleClick = (event) => {
@@ -13,7 +13,7 @@ function CreateBox({modalOptions, onAddBox, onClose, workshopItems}) {
 
   return (
     <Modal
-      open={modalOptions.isOpen}
+      open={isOpen}
       onClose={onClose}
       aria-labelledby="modal-body"
     >

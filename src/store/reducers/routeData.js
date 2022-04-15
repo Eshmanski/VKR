@@ -1,20 +1,16 @@
 import { copyObject } from '../../shared/utils';
-import { ADD_ROUTE_DATA, DELETE_ROUTE, UPDATE_ROUTE_BODY, UPDATE_ROUTE_TITLE } from '../actions/actionsTypes';
+import { ADD_ROUTE_DATA, DELETE_ROUTE, SET_LOADED_ROUTE, UPDATE_ROUTE_BODY, UPDATE_ROUTE_TITLE } from '../actions/actionsTypes';
 
 
 const initialState = {
   name: 'Маршруты',
-  items: [
-    {id: 'route-999', title: 'reoute_1', type: 'route', body: {
-      name: 'reoute',
-      workshopNodes: [],
-      lines: [],
-    }}
-  ]
+  items: []
 }
 
 export default function routeDataReducer(state = initialState, action) {
   switch(action.type) {
+    case SET_LOADED_ROUTE:
+      return action.payload;
     case ADD_ROUTE_DATA:
       return addNewRoute(state, action.payload);
     case UPDATE_ROUTE_TITLE:

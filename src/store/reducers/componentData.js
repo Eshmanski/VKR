@@ -1,13 +1,15 @@
 import { copyObject } from '../../shared/utils';
-import { ADD_COMPONENT_DATA, DELETE_COMPONENT, UPDATE_COMPONENT_TITLE, UPDATE_COMPONENT_BODY } from '../actions/actionsTypes';
+import { ADD_COMPONENT_DATA, DELETE_COMPONENT, UPDATE_COMPONENT_TITLE, UPDATE_COMPONENT_BODY, SET_LOADED_COMPONENT } from '../actions/actionsTypes';
 
 const initialState = {
-    name: 'Деталь',
+    name: 'Детали',
     items: []
 }
 
 export default function componentDataReducer(state = initialState, action) {
   switch(action.type) {
+    case SET_LOADED_COMPONENT:
+      return action.payload;
     case ADD_COMPONENT_DATA:
       return addNewComponent(state, action.payload);
     case UPDATE_COMPONENT_TITLE:

@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box';
-import { Provider, useDispatch } from 'react-redux';
+import { useDispatch } from 'react-redux';
 // import { createStore } from 'redux';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Workspace from '../../components/Workspace/Workspace';
@@ -13,7 +13,7 @@ function ProjectPage() {
 
   useEffect(() => {
     dispatch(fetchProject());
-  }, [])
+  }, []);
 
   return (
     <Box

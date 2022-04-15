@@ -1,5 +1,5 @@
 import { copyObject } from '../../shared/utils';
-import { ADD_WORKSHOP_DATA, UPDATE_WORKSHOP_TITLE, UPDATE_WORKSHOP_BODY, DELETE_WORKSHOP } from '../actions/actionsTypes';
+import { ADD_WORKSHOP_DATA, UPDATE_WORKSHOP_TITLE, UPDATE_WORKSHOP_BODY, DELETE_WORKSHOP, SET_LOADED_WORKSHOP } from '../actions/actionsTypes';
 
 const initialState = {
   name: 'Цеха',
@@ -8,6 +8,8 @@ const initialState = {
 
 export default function workshopDataReducer(state = initialState, action) {
   switch(action.type) {
+    case SET_LOADED_WORKSHOP:
+      return action.payload;
     case ADD_WORKSHOP_DATA:
       return addNewWorkshop(state, action.payload);
     case UPDATE_WORKSHOP_TITLE:

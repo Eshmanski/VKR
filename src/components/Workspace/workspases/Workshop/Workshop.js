@@ -1,69 +1,43 @@
-import { useState, useEffect, useCallback } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
-import styles from './Workshop.module.css'
 import Title from '../../../Title/Title';
-import { deleteWorkshop, updateWorkshopBody } from '../../../../store/actions/workshopDataAction';
-import { clearChosenItem, setBodyChanging } from '../../../../store/actions/stateProjectActions';
+import { changeBodyItem, deleteChosenItem, returnBodyItem, saveBodyItem, setBodyChanging } from '../../../../store/actions/stateProjectActions';
+import styles from './Workshop.module.css'
 
 
 
-function Workshop({ itemId }) {
-  const workshopDataItem = useSelector(store => store.workshopData.items.find(item => item.id === itemId));
+function Workshop() {
+  const { chosenItem, isBodyChanging } = useSelector(store => store.stateProject);
+
   const dispatch = useDispatch();
 
-  const [isEditBody, setIsEditBody] = useState(false);
-
-  const [inputName, setInputName] = useState('');
-  const [inputDescription, setInputDescription] = useState('');
-
-  const fillField = useCallback(() => {
-    setInputName(workshopDataItem.body.name);
-    setInputDescription(workshopDataItem.body.description);
-  }, [
-    workshopDataItem.body.name,
-    workshopDataItem.body.description
-  ]);
-
-  useEffect(() => {
-    fillField();
-  }, [
-    fillField
-  ]);
-
-  const saveBody = () => {
-    dispatch(updateWorkshopBody({itemId, newBody: {name: inputName, description: inputDescription}}));
-    dispatch(setBodyChanging(false));
-    removeChange();
-  }
-
-  const deleteItem = () => {
-    dispatch(setBodyChanging(false));
-    dispatch(clearChosenItem());
-    dispatch(deleteWorkshop({itemId}));
+  const changeField = (key, value) => {
+    dispatch(changeBodyItem({...chosenItem.body, [key]: value}));
   }
 
   const switchChange = () => {
     dispatch(setBodyChanging(true));
-    setIsEditBody(true);
+  }
+
+  const saveBody = () => {
+    dispatch(saveBodyItem());
   }
 
   const removeChange = () => {
-    dispatch(setBodyChanging(false));
-    fillField();
-    setIsEditBody(false);
+    dispatch(returnBodyItem());
+  }
+  
+  const deleteItem = () => {
+    dispatch(deleteChosenItem());
   }
 
-  useEffect(() => {
-    setIsEditBody(false);
-  }, [itemId]);
 
-  window.addEventListener('saveBody', saveBody);
-  window.addEventListener('removeChange', removeChange);
+  const itemId = chosenItem.id;
+  const { name, description } = chosenItem.body;
 
   return (
     <div className={styles.info}>
-      <Title projectItem={workshopDataItem} itemId={itemId} itemType={'workshopData'}></Title>
+      <Title projectItem={chosenItem} itemId={itemId} itemType={'workshopData'}></Title>
 
       <table>
         <tbody>
@@ -71,8 +45,14 @@ function Workshop({ itemId }) {
 
             <td>Наименование цеха</td>
             <td>
-              {isEditBody || <div className={styles.inputBox}>{inputName}</div>}
-              {isEditBody && <input className={styles.hiddenInput} type="text" onChange={(event)=>setInputName(event.target.value)} value={inputName}/>}       
+              {isBodyChanging || <div className={styles.inputBox}>{name}</div>}
+              {isBodyChanging && 
+                <input 
+                  className={styles.hiddenInput} 
+                  type="text" 
+                  onChange={(e)=>changeField('name', e.target.value)} 
+                  value={name}
+                />}       
             </td>
 
           </tr>
@@ -82,9 +62,9 @@ function Workshop({ itemId }) {
             <td>
               <textarea
                 className={styles.description}
-                type="text-area" disabled={!isEditBody}
-                onChange={(e)=>setInputDescription(e.target.value)}
-                value={inputDescription} 
+                type="text-area" disabled={!isBodyChanging}
+                onChange={(e)=>changeField('description', e.target.value)}
+                value={description} 
               />
 
             </td>
@@ -93,8 +73,8 @@ function Workshop({ itemId }) {
         </tbody>
       </table>
       <div className={styles.btnList}>
-        {isEditBody || <Button onClick={() => switchChange()} sx={{margin:'10px'}} color="secondary" variant="contained">Редактировать</Button>}
-        {isEditBody && 
+        {isBodyChanging || <Button onClick={() => switchChange()} sx={{margin:'10px'}} color="secondary" variant="contained">Редактировать</Button>}
+        {isBodyChanging && 
           <div>
             <Button onClick={() => removeChange()} sx={{margin:'10px'}} color="error" variant="contained">Отменить</Button>
             <Button onClick={saveBody} sx={{margin:'10px'}} color="success" variant="contained">Сохранить</Button>

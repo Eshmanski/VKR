@@ -27,7 +27,6 @@ function Title({itemType, itemId, projectItem}) {
   ]);
 
   const saveTitle = () => {
-    console.log(titleActions[itemType]);
     dispatch(titleActions[itemType]({ itemId, newTitle: inputTitle }))
     setIsEditTitle(false);
   }
