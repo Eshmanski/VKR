@@ -1,5 +1,5 @@
 import { copyObject, formalizeState } from "../../shared/utils";
-import { CLEAR_CHOSEN_ITEM, FETCH_START, FETCH_END, SET_BODY_CHANGING, SET_CHOSEN_ITEM, TOGGLE_PACK, FETCH_ERROR, CHANGE_BODY_ITEM } from "./actionsTypes";
+import { CLEAR_CHOSEN_ITEM, FETCH_START, FETCH_END, SET_BODY_CHANGING, SET_CHOSEN_ITEM, TOGGLE_PACK, FETCH_ERROR, CHANGE_BODY_ITEM,  SWITCH_SEARCH_COMPONENT, CLOSE_SEARCH_COMPONENT } from "./actionsTypes";
 import { deleteComponent, setLoadedComponent, updateComponentBody } from "./componentDataAction";
 import { deleteProduct, setLoadedProduct, updateProductBody } from "./productDataActons";
 import { deleteRoute, setLoadedRoute, updateRouteBody } from "./routeDataAction";
@@ -122,4 +122,12 @@ export function clearChosenItem() {
 
 export function setBodyChanging(isChanging) {
   return {type: SET_BODY_CHANGING, payload: { isChanging }};
+}
+
+export function switchSearchComponent() {
+  return {type: SWITCH_SEARCH_COMPONENT}
+}
+
+export function closeSearchComponent() {
+  return {type: CLOSE_SEARCH_COMPONENT};
 }

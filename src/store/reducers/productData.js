@@ -25,7 +25,7 @@ export default function productDataReducer(state = initialState, action) {
 
 function addNewProduct(state, {itemId, itemName}) {
   const newItems = state.items.concat();
-  newItems.push({id: itemId, title: itemName, body: { name: itemName, drawing: '', routeId: '', componentsId: [], description: '' }});
+  newItems.push({id: itemId, title: itemName, type: 'product', body: { name: itemName, drawing: '', routeId: '', componentsId: [], description: '' }});
   return {...state, items: newItems};
 }
 

@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { kitcut } from '../../shared/utils';
 import styles from './WorkshopBox.module.css';
 
 
@@ -43,6 +44,7 @@ function WorkshopBox({refDisplay, workshopNode, isCreateLine, isActive, isDelete
     : style.border='1px solid black';
   
   const switchDrag = () => {
+    let isChanged = false;
     let x = 0;
     let y = 0;
 
@@ -52,6 +54,7 @@ function WorkshopBox({refDisplay, workshopNode, isCreateLine, isActive, isDelete
       y = e.pageY - e.currentTarget.getBoundingClientRect().top;
 
       if(isUpdatePos) {
+        isChanged = true;
         isUpdatePos.current = false;
         setTimeout(() => {
           setPosition({x, y});
@@ -62,7 +65,9 @@ function WorkshopBox({refDisplay, workshopNode, isCreateLine, isActive, isDelete
     }
 
     refDisplay.current.onmouseup = () => {
-      updatePosition(workshopNode.id, {x, y});
+      if(isChanged) {
+        updatePosition(workshopNode.id, {x, y});
+      }
       refDisplay.current.onmousemove = null;
       refDisplay.current.onmouseup = null;
     }
@@ -76,8 +81,9 @@ function WorkshopBox({refDisplay, workshopNode, isCreateLine, isActive, isDelete
         style={style} 
         onMouseDown={(e) => {switchDrag(e)}}
         onMouseMove={null}
+        title={workshopData.title}
       >
-        {workshopData.title}
+        { kitcut(workshopData.title, 12) }
       </div>
     } else {
       return <div 
@@ -87,8 +93,9 @@ function WorkshopBox({refDisplay, workshopNode, isCreateLine, isActive, isDelete
         onMouseDown={null}
         onMouseMove={null}
         onClick={isCreateLine ? () => chooseBox(workshopNode.id) : () => deleteBox(workshopNode.id)}
+        title={workshopData.title}
       >
-        {workshopData.title}
+        { kitcut(workshopData.title, 12) }
       </div>
     }
   }

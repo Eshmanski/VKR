@@ -17,7 +17,7 @@ export function addRouteData({_, itemName}) {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({title: itemName, body: { name: itemName, workshopNodes: [], lines: []}})
+        body: JSON.stringify({title: itemName, type: 'route', body: { name: itemName, workshopNodes: [], lines: []}})
       });
       const data = await res.json();
 

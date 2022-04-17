@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import SearchIcon from '@mui/icons-material/Search';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import FolderTree from '../Folders/FolderTree';
-import styles from './Sidebar.module.css';
 import nextId from "react-id-generator";
 import CreateItem from '../modals/CreateItem/CreateItem'
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,6 +10,9 @@ import { addProductData } from '../../store/actions/productDataActons';
 import { addComponentData } from '../../store/actions/componentDataAction';
 import { addWorkshopData } from '../../store/actions/workshopDataAction';
 import { addRouteData } from '../../store/actions/routeDataAction';
+import { switchSearchComponent } from '../../store/actions/stateProjectActions';
+import styles from './Sidebar.module.css';
+import Search from '../Search/Search';
 
 
 const createActions = {
@@ -19,7 +24,7 @@ const createActions = {
 
 function Sidebar() {
   const [modalOptions, setModalOptions] = useState({ isOpen: false, typeData: '' });
-  const {productData, componentData, workshopData, routeData} = useSelector(store => store);
+  const {productData, componentData, workshopData, routeData, stateProject: { isShowSearch }} = useSelector(store => store);
   const dispatch = useDispatch();
 
   const addFile = (packType, itemName) => {
@@ -40,12 +45,28 @@ function Sidebar() {
 
   return (
     <div className={styles.sidebar}>
-      <p>Предприятие</p>
-      <FolderTree 
-        data={{productData, componentData, routeData, workshopData}} 
-        onOpen={handleOpen}
-      ></FolderTree>
-      <CreateItem modalOptions={modalOptions} onAddFile={addFile} onClose={handleClose}></CreateItem>
+      <div className={styles.main}>
+        <div className={styles.header}>
+          <div className={styles.nameProject}>Предприятие</div>
+          <div 
+            className={styles.search + ' ' +  (isShowSearch ? styles.activeSearch : '')}
+            onClick={() => dispatch(switchSearchComponent())}
+          >
+              <SearchIcon className={styles.loup}></SearchIcon>
+              { isShowSearch 
+                ? <ArrowBackIosIcon></ArrowBackIosIcon>
+                : <ArrowForwardIosIcon></ArrowForwardIosIcon>
+
+              }
+          </div>
+        </div>
+        <FolderTree 
+          data={{productData, componentData, routeData, workshopData}} 
+          onOpen={handleOpen}
+        ></FolderTree>
+        <CreateItem modalOptions={modalOptions} onAddFile={addFile} onClose={handleClose}></CreateItem>
+      </div>
+      <Search></Search>
     </div>
   )
 }

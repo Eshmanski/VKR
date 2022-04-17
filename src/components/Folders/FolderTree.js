@@ -1,4 +1,5 @@
 import TreeView from '@mui/lab/TreeView';
+import { styled } from '@mui/material/styles';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import TreeItem from '@mui/lab/TreeItem';
@@ -8,10 +9,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { setChosenItem, togglePack } from '../../store/actions/stateProjectActions';
 import { useState } from 'react';
 import SaveChanges from '../modals/SaveChanges/SaveChanges';
+import { kitcut } from '../../shared/utils';
 
 
 function FolderTree({ data, onOpen }) {
-  const {chosenPacks, chosenItemId, isBodyChanging} = useSelector(store => store.stateProject);
+  const {chosenPacks, chosenItemId, chosenType, isBodyChanging} = useSelector(store => store.stateProject);
   const dispatch = useDispatch();
 
   const [saveAlertOption, setSaveAlertOption] = useState({isOpen: false, fn: null});
@@ -40,6 +42,18 @@ function FolderTree({ data, onOpen }) {
     }
   }
 
+  const CustomizedTreeItem = styled(TreeItem)`
+  & .MuiTreeItem-label {
+    font-size: 14px;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+  }
+  
+  & .MuiTreeItem-iconContainer {
+    display: none;
+  }
+`;
+
+
   return (
     <>
     <TreeView
@@ -48,19 +62,26 @@ function FolderTree({ data, onOpen }) {
       sx={{
         flexGrow: 1,
         width: 'inherit', 
-        overflowX: 'hidden', 
-        fontSize: '14px',
+        overflowX: 'hidden',
         overflowY: 'scroll',
       }}
       expanded={chosenPacks}
-      selected={[chosenItemId]}
+      selected={[chosenItemId, chosenType]}
     >
       {Object.keys(data).map((key) => {
         return (
             <div style={{position: 'relative'}} key={key}>
             <div className={styles.addBtn} onClick={() => createItem(key)}><AddIcon></AddIcon></div>
-              <TreeItem nodeId={key} label={data[key].name} onClick={() => clickPackHandler(key)}>
-                {data[key].items.map(item => <TreeItem nodeId={item.id} label={item.title} key={item.id} onClick={() => choseItem(item.id, key)}/>)}
+              <TreeItem nodeId={key} label={data[key].name} onClick={() => clickPackHandler(key)} >
+                {data[key].items.map(item => 
+                  <CustomizedTreeItem 
+                    nodeId={item.id}
+                    label={kitcut(item.title, 23)}
+                    key={item.id}
+                    onClick={() => choseItem(item.id, key)}
+                    sx={{overflow: 'hidden', whiteSpace: 'nowrap'}}
+                  />
+                )}
               </TreeItem>
             </div>
         );

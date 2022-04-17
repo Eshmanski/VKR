@@ -1,12 +1,14 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Product from './workspases/Product/Product';
 import Component from './workspases/Component/Component';
 import Route from './workspases/Route/Route';
 import Workshop from './workspases/Workshop/Workshop';
 import styles from './Workspace.module.css';
+import { closeSearchComponent } from '../../store/actions/stateProjectActions';
 
 function Workspace() {
   const { chosenType, chosenItemId, fetching } = useSelector(store => store.stateProject);
+  const dispatch = useDispatch();
 
   function renderComponent(itemType, itemId) {
     switch(itemType) {
@@ -24,7 +26,7 @@ function Workspace() {
   }
 
   return (
-    <div className={styles.workspace}>
+    <div className={styles.workspace} onClick={() => dispatch(closeSearchComponent())}>
       {!fetching && renderComponent(chosenType, chosenItemId)}
     </div>
   )

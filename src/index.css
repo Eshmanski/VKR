@@ -28,7 +28,6 @@ code {
 
 .MuiTreeView-root::-webkit-scrollbar {
   background-color: rgb(92, 92, 92);
-
 }
 
 .MuiTreeView-root::-webkit-scrollbar-thumb {
@@ -60,4 +59,24 @@ td.top {
 
 th {
   border: 1px solid grey;
+}
+
+.MuiTreeItem-content {
+  font-size: 5px !important;
+}
+
+.MuiTreeItem-group {
+  font-size: 5px !important;
+}
+
+.MuiTreeItem-root {
+  font-size: 5px;
+}
+
+.MuiTreeItem-label {
+  font-size: 5px;
+}
+
+.iconContainer {
+  font-size: 5px;
 }

@@ -1,0 +1,93 @@
+.searchBlock {
+  -webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+
+  z-index: 80;
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 250px;
+  background-color: rgb(39, 39, 39);
+  flex-grow: 1;
+  transition: left .5s;
+  box-sizing: border-box;
+}
+
+.searchMain {
+  display: flex;
+  flex-direction: column;
+  padding: 10px 0px 0 0px;
+  width: 100%;
+}
+
+.filterInput {
+  display: flex;  
+  flex-direction: row;
+  background-color: #fff;
+  margin: 0 20px;
+  border-radius: 5px;
+  padding: 5px;
+  
+}
+
+.filterInput input {
+  width: 85%;
+  border: none;
+  outline: none;
+  flex-grow: 1;
+}
+
+.checkBoxsBlock {
+  font-size: 15px;
+  margin-top: 10px;
+  margin-left: 20px;
+  margin-bottom: 10px;
+  text-align: left;
+  color: white;
+  overflow: hidden;
+}
+
+.checkBoxsBlock>div>label {
+  cursor: pointer;
+}
+
+.itemsList {
+  background: rgb(51, 51, 51);
+  overflow-y: scroll;
+  flex-grow: 1;
+  padding-top: 10px;
+  padding-left: 20px;
+  padding-right: 10px;
+  text-align: left;
+  color: white;
+
+}
+
+.item {
+  cursor: pointer;
+  padding: 5px;
+  border-bottom: 2px solid rgb(87, 87, 87);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.item:hover {
+  color: blue;
+  font-size: 17px;
+  border-bottom: 2px solid blue;
+}
+
+.itemsList::-webkit-scrollbar-thumb {
+  background-color: rgb(153, 153, 153);
+  border-radius: 5px;
+}
+
+.itemsList::-webkit-scrollbar {
+  background-color: rgb(92, 92, 92);
+
+}

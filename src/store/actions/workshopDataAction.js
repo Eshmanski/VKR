@@ -17,7 +17,7 @@ export function addWorkshopData({_, itemName}) {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({title: itemName, body: { name: itemName, description: '' }})
+        body: JSON.stringify({title: itemName, type: 'workshop', body: { name: itemName, description: '' }})
       });
       const data = await res.json();
 

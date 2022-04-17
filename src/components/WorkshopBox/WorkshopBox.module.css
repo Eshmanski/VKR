@@ -4,9 +4,10 @@
   position: absolute;
   background-color: rgb(235, 235, 235);
   border: 1px solid black;
-  z-index: 999;
+  z-index: 50;
   cursor: grab;
   user-select: none;
+  font-size: 12px;
 }
 
 .deleteBox:hover {

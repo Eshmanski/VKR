@@ -25,7 +25,7 @@ export default function componentDataReducer(state = initialState, action) {
 
 function addNewComponent(state, {itemId, itemName}) {
   const newItems = state.items.concat();
-  newItems.push({id: itemId, title: itemName, body: { name: itemName, drawing: '', routeId: '', description: '' }});
+  newItems.push({id: itemId, title: itemName, type: 'component', body: { name: itemName, drawing: '', routeId: '', description: '' }});
   return {...state, items: newItems};
 }
 

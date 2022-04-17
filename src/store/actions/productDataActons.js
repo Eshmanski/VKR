@@ -17,7 +17,7 @@ export function addProductData({_, itemName}) {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({title: itemName, body: { name: itemName, drawing: '', routeId: '', componentsId: [], description: '' }})
+        body: JSON.stringify({title: itemName, type: 'product', body: { name: itemName, drawing: '', routeId: '', componentsId: [], description: '' }})
       });
       const data = await res.json();
 

@@ -15,6 +15,7 @@ function Layout({ children }) {
         <li className={styles.logo}>КТМ</li>
       </nav>
 
+
       <ThemeProvider theme={theme}>
         {children}
       </ThemeProvider>

@@ -1,15 +1,15 @@
 import { copyObject } from '../../shared/utils';
-import { CHANGE_BODY_ITEM, CLEAR_CHOSEN_ITEM, FETCH_END, FETCH_ERROR, FETCH_START, SET_BODY_CHANGING, SET_CHOSEN_ITEM, TOGGLE_PACK } from "../actions/actionsTypes";
+import { CHANGE_BODY_ITEM, CLEAR_CHOSEN_ITEM, CLOSE_SEARCH_COMPONENT, FETCH_END, FETCH_ERROR, FETCH_START, SET_BODY_CHANGING, SET_CHOSEN_ITEM, SWITCH_SEARCH_COMPONENT, TOGGLE_PACK } from "../actions/actionsTypes";
 
 const initialState = {
   chosenPacks: [''],
   chosenItemId: '',
   chosenType: '',
+  chosenItem: {},
   isBodyChanging: false,
   isShowSaveAlert: false,
-  saveBody: null,
+  isShowSearch: false,
   fetching: false,
-  chosenItem: {},
   error: '',
 }
 
@@ -31,6 +31,10 @@ export default function stateProjectReducer(state = initialState, action) {
       return {...state, fetching: false};
     case FETCH_ERROR:
       return {...state, fatching: false, error: action.payload.error};
+    case SWITCH_SEARCH_COMPONENT:
+      return {...state, isShowSearch: !state.isShowSearch};
+    case CLOSE_SEARCH_COMPONENT:
+      return {...state, isShowSearch: false};
     default:
       return state;
   }
@@ -66,3 +70,4 @@ function clearChosenItem(state) {
 function setBodyChanging(state, {isChanging}) {
   return { ...state, isBodyChanging: isChanging };
 }
+

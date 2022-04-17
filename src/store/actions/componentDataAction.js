@@ -17,7 +17,7 @@ export function addComponentData({_, itemName}) {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({title: itemName, body: { name: itemName, drawing: '', routeId: '', description: '' }})
+        body: JSON.stringify({title: itemName, type: 'component', body: { name: itemName, drawing: '', routeId: '', description: '' }})
       });
       const data = await res.json();
 

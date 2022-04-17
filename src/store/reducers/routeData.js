@@ -26,7 +26,7 @@ export default function routeDataReducer(state = initialState, action) {
 
 function addNewRoute(state, {itemId, itemName}) {
   const newItems = state.items.concat();
-  newItems.push({id: itemId, title: itemName, body: { name: itemName, workshopNodes: [], lines: []}});
+  newItems.push({id: itemId, title: itemName, type: 'route', body: { name: itemName, workshopNodes: [], lines: []}});
   return {...state, items: newItems};
 }
 
