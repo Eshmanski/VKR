@@ -2,12 +2,12 @@ import { useState } from 'react';
 import { Button, Modal, Typography, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { styleModal } from '../../../shared/stylesMUI';
 
-function ChooseComponent({isOpen, onClose, onAddComponent, componentItems}) {
+function ChooseItem({isOpen, onClose, onAdd, items}) {
   const [text, setText] = useState('');
 
   const handleClick = (event) => {
     event.preventDefault();
-    onAddComponent(text);
+    onAdd(text);
     setText('');
   }
 
@@ -29,7 +29,7 @@ function ChooseComponent({isOpen, onClose, onAddComponent, componentItems}) {
               label="Деталь"
               onChange={(e) => {setText(e.target.value)}}
             >
-              {componentItems.map(item => {
+              {items.map(item => {
                 return <MenuItem key={item.id} value={item.id}>{item.title}</MenuItem>
               })}
             </Select>
@@ -50,4 +50,4 @@ function ChooseComponent({isOpen, onClose, onAddComponent, componentItems}) {
   )
 }
 
-export default ChooseComponent;
+export default ChooseItem;

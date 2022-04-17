@@ -70,13 +70,32 @@ textarea {
 }
 
 
-.componentCard {
+.itemCard {
   display: flex;
   flex-direction: row;
   align-items: stretch;
 }
 
-.componentBox {
+.itemBlock {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+}
+
+.itemNum {
+  width: 50px;
+  margin-right: 2px;
+  padding: 6px;
+  text-align: center;
+}
+
+.itemNumShow {
+  margin-bottom: 5px;
+  border: 1px solid rgb(117, 117, 117);
+  border-radius: 2px;
+}
+
+.itemName {
   flex-grow: 3;
   position: relative;
   border: 1px solid rgb(124, 124, 124);
@@ -85,19 +104,17 @@ textarea {
   margin-bottom: 5px;
 }
 
-.componentRed {
+.itemRed {
   background-color: white;
 }
 
-.componentBox:last-child {
-  margin-bottom: 0px;
-}
 
-.componentBox.link {
+
+.itemName.link {
   cursor: pointer;
 }
 
-.componentBox.link:hover {
+.itemName.link:hover {
   color: blue;
   border: 1px solid blue;
 }

@@ -39,7 +39,8 @@ export function formalizeState(data) {
         if(data.items[key].body.lines === undefined) data.items[key].body.lines = [];
         break;
       case 'Изделия':
-        if(data.items[key].body.componentsId === undefined) data.items[key].body.componentsId = [];
+        if(data.items[key].body.componentsId === undefined) data.items[key].body.componentsId = {};
+        if(data.items[key].body.productsId === undefined) data.items[key].body.productsId = {};
         break;
       default: 
         break;

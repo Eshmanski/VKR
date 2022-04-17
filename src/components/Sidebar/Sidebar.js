@@ -66,7 +66,7 @@ function Sidebar() {
         ></FolderTree>
         <CreateItem modalOptions={modalOptions} onAddFile={addFile} onClose={handleClose}></CreateItem>
       </div>
-      <Search></Search>
+      <Search isShowSearch={isShowSearch}></Search>
     </div>
   )
 }

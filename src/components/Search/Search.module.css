@@ -69,11 +69,25 @@
 }
 
 .item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
   cursor: pointer;
   padding: 5px;
   border-bottom: 2px solid rgb(87, 87, 87);
   overflow: hidden;
   white-space: nowrap;
+}
+
+.item>img {
+  width: 30px;
+  margin-right: 5px;
+  filter: invert(75%);
+  text-align: end;
+}
+
+.item>div {
+  /* padding-bottom: 5px; */
 }
 
 .item:hover {

@@ -4,9 +4,9 @@
   top: 0;
   bottom: 0;
   min-width: 1000px;
-  min-height: 1000px;
   width: calc(100vw - 250px);
-  overflow: auto;
-  padding: 30px;
+  overflow-y: auto;
+  padding: 10px;
   background: rgb(235, 235, 235);
+  z-index: 1;
 }

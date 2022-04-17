@@ -44,6 +44,7 @@ function FolderTree({ data, onOpen }) {
 
   const CustomizedTreeItem = styled(TreeItem)`
   & .MuiTreeItem-label {
+    margin-left: 10px;
     font-size: 14px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   }
@@ -76,7 +77,7 @@ function FolderTree({ data, onOpen }) {
                 {data[key].items.map(item => 
                   <CustomizedTreeItem 
                     nodeId={item.id}
-                    label={kitcut(item.title, 23)}
+                    label={kitcut(item.title, 22)}
                     key={item.id}
                     onClick={() => choseItem(item.id, key)}
                     sx={{overflow: 'hidden', whiteSpace: 'nowrap'}}

@@ -17,7 +17,7 @@ export function addProductData({_, itemName}) {
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify({title: itemName, type: 'product', body: { name: itemName, drawing: '', routeId: '', componentsId: [], description: '' }})
+        body: JSON.stringify({title: itemName, type: 'product', body: { name: itemName, drawing: '', routeId: '', componentsId: {}, productsId: {}, description: '' }})
       });
       const data = await res.json();
 
@@ -69,8 +69,9 @@ export function updateProductBody({itemId, newBody}) {
       });
       const data = await res.json();
 
-      if(data.body.componentsId === undefined) data.body.componentsId = [];
-      
+      if(data.body.componentsId === undefined) data.body.componentsId = {};
+      if(data.body.productsId === undefined) data.body.productsId = {};
+
       dispatch({type: UPDATE_PRODUCT_BODY, payload: {itemId, newBody: data.body}});
 
       dispatch(fetchEnd());

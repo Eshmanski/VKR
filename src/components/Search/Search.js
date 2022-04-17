@@ -89,7 +89,11 @@ function Search({isShowSearch}) {
         </div>
 
         <div className={styles.itemsList}>
-          {allItems.map(item => <div key={item.id} className={styles.item} onClick={() => handleMoveTo(item.id, item.type + 'Data')}>{item.title}</div>)}
+          {allItems.map(item => 
+            <div key={item.id} className={styles.item} onClick={() => handleMoveTo(item.id, item.type + 'Data')}>
+              <img src={`./icons/${item.type}-icon.png`} alt="" />
+              <div>{item.title}</div>
+            </div>)}
         </div>
       </div>
       {isShowSearch && <DragLine setWidth={setWidth} width={width}></DragLine>}
