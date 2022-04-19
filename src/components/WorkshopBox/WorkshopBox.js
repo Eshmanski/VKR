@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { kitcut } from '../../shared/utils';
+import LinkIcon from '@mui/icons-material/Link';
 import styles from './WorkshopBox.module.css';
+import { setChosenItem } from '../../store/actions/stateProjectActions';
 
 
 function WorkshopBox({refDisplay, workshopNode, isCreateLine, isActive, isDelete, chooseBox, deleteBox, updatePosition, parentUpdate, workshopNodes}) {
@@ -9,8 +11,10 @@ function WorkshopBox({refDisplay, workshopNode, isCreateLine, isActive, isDelete
     .workshopData
     .items
     .filter(item => item.id === workshopNode.id))[0];
+  const dispatch = useDispatch();
     
   const [position, setPosition] = useState({x: 0, y: 0});
+  const [isShowLink, setIsShowLink] = useState(false);
 
   const isUpdatePos = useRef(true);
 
@@ -73,6 +77,11 @@ function WorkshopBox({refDisplay, workshopNode, isCreateLine, isActive, isDelete
     }
   }
 
+
+  const handleMoveTo = (itemId, packType) => {
+    dispatch(setChosenItem({itemId, packType}));
+  }
+
   const renderElement = () => {
     if(!isCreateLine && !isDelete) {
       return <div
@@ -81,9 +90,12 @@ function WorkshopBox({refDisplay, workshopNode, isCreateLine, isActive, isDelete
         style={style} 
         onMouseDown={(e) => {switchDrag(e)}}
         onMouseMove={null}
+        onMouseEnter={()=>setIsShowLink(true)}
+        onMouseLeave={()=>setIsShowLink(false)}
         title={workshopData.title}
       >
         { kitcut(workshopData.title, 12) }
+        {isShowLink && <div className={styles.link} onClick={()=>handleMoveTo(workshopData.id, 'workshopData')}> <LinkIcon></LinkIcon> </div>}
       </div>
     } else {
       return <div 
