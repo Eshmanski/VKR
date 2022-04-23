@@ -60,3 +60,9 @@ export function kitcut(text, limit) {
 
   return text.trim() + "...";
 }
+
+export function ucFirst(str) {
+  if (!str) return str;
+
+  return str[0].toUpperCase() + str.slice(1);
+}

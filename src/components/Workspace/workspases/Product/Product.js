@@ -6,6 +6,7 @@ import Title from '../../../Title/Title';
 import AddIcon from '@mui/icons-material/Add';
 import { changeBodyItem, deleteChosenItem, returnBodyItem, saveBodyItem, setBodyChanging, setChosenItem } from '../../../../store/actions/stateProjectActions';
 import ChooseItem from '../../../modals/ChooseItem/ChooseItem';
+import ConfirmDel from '../../../modals/ConfirmDel/ConfirmDel';
 import ClearIcon from '@mui/icons-material/Clear';
 import { copyObject } from '../../../../shared/utils';
 
@@ -49,6 +50,7 @@ function Product() {
 
   const [showChooseComponent, setShowChooseComponent] = useState(false);
   const [showChooseProduct, setShowChooseProduct] = useState(false);
+  const [showConfirmDel, setShowConfirmDel] = useState(false);
 
   const onAddComponent = (id) => {
     changeField('componentsId', {...componentsId, [id]: {count: 1}});
@@ -246,7 +248,7 @@ function Product() {
             <Button onClick={saveBody} sx={{margin:'10px'}} color="success" variant="contained">Сохранить</Button>
           </div>
         }
-        <Button onClick={() => deleteItem()} sx={{margin:'10px'}} color="error" variant="contained">Удалить</Button>
+        <Button onClick={() => setShowConfirmDel(true)} sx={{margin:'10px'}} color="error" variant="contained">Удалить</Button>
       </div>
 
       <ChooseItem 
@@ -254,6 +256,7 @@ function Product() {
         onClose={() => setShowChooseComponent(false)}
         onAdd={onAddComponent}
         items={componentDataItems}
+        type='component'
       ></ChooseItem>
 
       <ChooseItem 
@@ -261,7 +264,16 @@ function Product() {
         onClose={() => setShowChooseProduct(false)}
         onAdd={onAddProduct}
         items={productDataItems.filter(item => item.id !== itemId)}
+        type='product'
       ></ChooseItem>
+
+      <ConfirmDel
+        isOpen={showConfirmDel}
+        onClose={() => setShowConfirmDel(false)}
+        onDel={() => deleteItem()}
+        type={'product'}
+        id={itemId}
+      ></ConfirmDel>
     </div>
   );
 }

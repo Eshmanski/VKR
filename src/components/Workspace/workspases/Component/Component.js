@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import styles from './Component.module.css'
 import Title from '../../../Title/Title';
+import ConfirmDel from '../../../modals/ConfirmDel/ConfirmDel';
 import { changeBodyItem, deleteChosenItem, returnBodyItem, saveBodyItem, setBodyChanging, setChosenItem } from '../../../../store/actions/stateProjectActions';
 
 function Component() {
@@ -36,6 +38,8 @@ function Component() {
 
   const itemId = chosenItem.id;
   const { name, drawing, routeId, description } = chosenItem.body;
+
+  const [showConfirmDel, setShowConfirmDel] = useState(false);
 
   return (
     <div className={styles.info}>
@@ -96,7 +100,6 @@ function Component() {
                 value={description} 
               />
             </td>
-
           </tr>
         </tbody>
       </table>
@@ -108,8 +111,17 @@ function Component() {
             <Button onClick={saveBody} sx={{margin:'10px'}} color="success" variant="contained">Сохранить</Button>
           </div>
         }
-        <Button onClick={() => deleteItem()} sx={{margin:'10px'}} color="error" variant="contained">Удалить</Button>
+        <Button onClick={() => setShowConfirmDel(true)} sx={{margin:'10px'}} color="error" variant="contained">Удалить</Button>
       </div>
+
+
+      <ConfirmDel
+        isOpen={showConfirmDel}
+        onClose={() => setShowConfirmDel(false)}
+        onDel={() => deleteItem()}
+        type={'component'}
+        id={itemId}
+      ></ConfirmDel>
     </div>
   )
 }

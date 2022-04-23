@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Button, Modal, Typography, Box, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
 import { styleModal } from '../../../shared/stylesMUI';
 
-function ChooseItem({isOpen, onClose, onAdd, items}) {
+function ChooseItem({isOpen, onClose, onAdd, items, type}) {
   const [text, setText] = useState('');
 
   const handleClick = (event) => {
@@ -10,6 +10,21 @@ function ChooseItem({isOpen, onClose, onAdd, items}) {
     onAdd(text);
     setText('');
   }
+
+  let typeNames = new Array(2);
+
+  switch(type) {
+    case 'product':
+      typeNames = ['изделие', 'Изделие'];
+      break;
+    case 'component':
+      typeNames = ['деталь', 'Деталь'];
+      break;
+    default:
+      typeNames = ['элемент', 'Элемент'];
+      break;
+  }
+
 
   return (
     <Modal
@@ -19,9 +34,9 @@ function ChooseItem({isOpen, onClose, onAdd, items}) {
     >
       <Box sx={styleModal} component="form">
         <Typography id="modal-body" variant="h6" component="h2" sx={{display: 'flex', flexDirection: 'column'}}>
-          <p style={{fontSize: '20px', paddingLeft: 0}}>Выберете деталь</p>
+          <p style={{fontSize: '20px', paddingLeft: 0}}>Выберете {typeNames[0]}</p>
           <FormControl>
-            <InputLabel id="select-workspace-label">Деталь</InputLabel>
+            <InputLabel id="select-workspace-label">{typeNames[1]}</InputLabel>
             <Select
               labelId="select-workspace-label"
               id="demo-simple-select"

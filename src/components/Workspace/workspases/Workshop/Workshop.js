@@ -1,6 +1,8 @@
+import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import Title from '../../../Title/Title';
+import ConfirmDel from '../../../modals/ConfirmDel/ConfirmDel';
 import { changeBodyItem, deleteChosenItem, returnBodyItem, saveBodyItem, setBodyChanging } from '../../../../store/actions/stateProjectActions';
 import styles from './Workshop.module.css'
 
@@ -34,6 +36,8 @@ function Workshop() {
 
   const itemId = chosenItem.id;
   const { name, description } = chosenItem.body;
+
+  const [showConfirmDel, setShowConfirmDel] = useState(false);
 
   return (
     <div className={styles.info}>
@@ -80,8 +84,16 @@ function Workshop() {
             <Button onClick={saveBody} sx={{margin:'10px'}} color="success" variant="contained">Сохранить</Button>
           </div>
         }
-        <Button onClick={() => deleteItem()} sx={{margin:'10px'}} color="error" variant="contained">Удалить</Button>
+        <Button onClick={() => setShowConfirmDel(true)} sx={{margin:'10px'}} color="error" variant="contained">Удалить</Button>
       </div>
+
+      <ConfirmDel
+        isOpen={showConfirmDel}
+        onClose={() => setShowConfirmDel(false)}
+        onDel={() => deleteItem()}
+        type={'workshop'}
+        id={itemId}
+      ></ConfirmDel>
     </div>
   )
 }

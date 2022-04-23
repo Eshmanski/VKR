@@ -7,6 +7,7 @@ import Title from '../../../Title/Title';
 import { filterWorkshops } from '../../../../shared/utils';
 import { changeBodyItem, deleteChosenItem, returnBodyItem, saveBodyItem, setBodyChanging } from '../../../../store/actions/stateProjectActions';
 import RouteModel from './RouteModel/RouteModel';
+import ConfirmDel from '../../../modals/ConfirmDel/ConfirmDel';
 import styles from './Route.module.css';
 
 function Route({ itemId }) {
@@ -39,6 +40,7 @@ function Route({ itemId }) {
   const [isCreateLine, setIsCreateLine] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
   const [chosenBox, setChosenBox] = useState('');
+  const [showConfirmDel, setShowConfirmDel] = useState(false);
 
   const refDisplay = useRef(null);
 
@@ -105,7 +107,7 @@ function Route({ itemId }) {
             workshopItems={filterWorkshops(workshopDataItems, workshopNodes)}
           ></CreateBox>
 
-          <Button onClick={() => deleteItem()} sx={{position: 'absolute', right: 0, }} color="error" variant="contained">Удалить</Button>
+          <Button onClick={() => setShowConfirmDel(true)} sx={{position: 'absolute', right: 0, }} color="error" variant="contained">Удалить</Button>
         </div>
         { isBodyChanging && 
           <Box sx={{margin:'10px', position: 'absolute', left: '0px'}}>
@@ -116,6 +118,14 @@ function Route({ itemId }) {
        
       </div>
 
+
+      <ConfirmDel
+        isOpen={showConfirmDel}
+        onClose={() => setShowConfirmDel(false)}
+        onDel={() => deleteItem()}
+        type={'route'}
+        id={itemId}
+      ></ConfirmDel>
     </div>
   );
 }
