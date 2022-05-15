@@ -6,21 +6,10 @@ import FolderTree from '../Folders/FolderTree';
 import nextId from "react-id-generator";
 import CreateItem from '../modals/CreateItem/CreateItem'
 import { useDispatch, useSelector } from 'react-redux';
-import { addProductData } from '../../store/actions/productDataActons';
-import { addComponentData } from '../../store/actions/componentDataAction';
-import { addWorkshopData } from '../../store/actions/workshopDataAction';
-import { addRouteData } from '../../store/actions/routeDataAction';
-import { switchSearchComponent } from '../../store/actions/stateProjectActions';
+import { createModel, switchSearch } from '../../store/actions/stateProjectActions';
 import styles from './Sidebar.module.css';
 import Search from '../Search/Search';
 
-
-const createActions = {
-  productData: addProductData,
-  componentData: addComponentData,
-  workshopData: addWorkshopData,
-  routeData: addRouteData,
-}
 
 function Sidebar() {
   const [modalOptions, setModalOptions] = useState({ isOpen: false, typeData: '' });
@@ -30,7 +19,7 @@ function Sidebar() {
   const addFile = (packType, itemName) => {
     const itemId = nextId(`${packType}-`);
     handleClose();
-    dispatch(createActions[packType]({itemId, itemName}));
+    dispatch(createModel(packType, itemName));
   } 
 
   const handleOpen = (typeData) => setModalOptions({
@@ -50,7 +39,7 @@ function Sidebar() {
           <div className={styles.nameProject}>Предприятие</div>
           <div 
             className={styles.search + ' ' +  (isShowSearch ? styles.activeSearch : '')}
-            onClick={() => dispatch(switchSearchComponent())}
+            onClick={() => dispatch(switchSearch())}
           >
               <SearchIcon className={styles.loup}></SearchIcon>
               { isShowSearch 

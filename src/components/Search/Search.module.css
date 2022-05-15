@@ -86,10 +86,6 @@
   text-align: end;
 }
 
-.item>div {
-  /* padding-bottom: 5px; */
-}
-
 .item:hover {
   color: blue;
   font-size: 17px;

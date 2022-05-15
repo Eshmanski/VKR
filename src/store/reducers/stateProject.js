@@ -1,11 +1,11 @@
-import { copyObject } from '../../shared/utils';
-import { CHANGE_BODY_ITEM, CLEAR_CHOSEN_ITEM, CLOSE_SEARCH_COMPONENT, FETCH_END, FETCH_ERROR, FETCH_START, SET_BODY_CHANGING, SET_CHOSEN_ITEM, SWITCH_SEARCH_COMPONENT, TOGGLE_PACK } from "../actions/actionsTypes";
+import { SET_ENTERPRISE_MODELS, SET_MODEL_ID, TOGGLE_PACK, SET_BODY, SWITCH_SEARCH, CLOSE_SEARCH, CHANGE_BODY, SET_IS_BODY_CHANGING, FETCH_START, FETCH_ERROR, FETCH_END, CLEAR_BODY } from '../actions/actionsTypes';
 
 const initialState = {
-  chosenPacks: [''],
-  chosenItemId: '',
-  chosenType: '',
-  chosenItem: {},
+  enterpriseModels: [],
+  chosenPack: '',
+  chosenModelId: '',
+  bodyType: '',
+  chosenBody: {},
   isBodyChanging: false,
   isShowSaveAlert: false,
   isShowSearch: false,
@@ -15,59 +15,34 @@ const initialState = {
 
 export default function stateProjectReducer(state = initialState, action) {
   switch(action.type) {
-    case SET_CHOSEN_ITEM:
-      return setChosenItem(state, action.payload);
+    case SET_ENTERPRISE_MODELS:
+      return {...state, enterpriseModels: action.payload.enterpriseModels };
     case TOGGLE_PACK:
-      return togglePack(state, action.payload);
-    case CLEAR_CHOSEN_ITEM:
-      return clearChosenItem(state);
-    case SET_BODY_CHANGING:
-      return setBodyChanging(state, action.payload);
-    case CHANGE_BODY_ITEM: 
-      return changeBodyItem(state, action.payload);
+      if (state.chosenPack === action.payload.type)
+        return {...state, chosenPack: '' }
+      else
+         return {...state, chosenPack: action.payload.type };
+    case SET_MODEL_ID:
+      return { ...state, chosenPack: action.payload.type, chosenModelId: action.payload.id };
+    case SET_BODY:
+      return { ...state, chosenBody: action.payload.body, bodyType: action.payload.type };
+    case CHANGE_BODY:
+      return { ...state, chosenBody: action.payload.body };
+    case SET_IS_BODY_CHANGING:
+      return { ...state, isBodyChanging: action.payload.flag };
+    case CLEAR_BODY:
+      return { ...state, chosenModelId: '', bodyType: '', chosenBody: {}, isBodyChanging: false }
+    case SWITCH_SEARCH:
+      return { ...state, isShowSearch: !state.isShowSearch};
+    case CLOSE_SEARCH:
+      return { ...state, isShowSearch: false };
     case FETCH_START:
-      return {...state, fetching: true};
+      return { ...state, fetching: true };
     case FETCH_END:
-      return {...state, fetching: false};
+      return { ...state, fetching: false };
     case FETCH_ERROR:
-      return {...state, fatching: false, error: action.payload.error};
-    case SWITCH_SEARCH_COMPONENT:
-      return {...state, isShowSearch: !state.isShowSearch};
-    case CLOSE_SEARCH_COMPONENT:
-      return {...state, isShowSearch: false};
+      return { ...state, error: action.payload.error };
     default:
       return state;
   }
 }
-
-function setChosenItem(state, {itemId, packType, chosenItem}) {
-  if(state.chosenPacks.includes(packType)) 
-    return {...state, chosenItemId: itemId, chosenType: packType, chosenItem};
-  else 
-    return  { ...state, chosenPacks: [...state.chosenPacks, packType], chosenItemId: itemId, chosenType: packType, chosenItem};
-}
-
-function changeBodyItem(state, {newBody}) {
-  return {...state, chosenItem: {...state.chosenItem, body: newBody}};
-}
-
-function togglePack(state, {packType}) {
-  if(state.chosenPacks.includes(packType))
-    return { ...state, chosenPacks: state.chosenPacks.filter(i => i !== packType) };
-  else 
-    return { ...state, chosenPacks: [...state.chosenPacks, packType] };
-}
-
-function clearChosenItem(state) {
-  const newState = copyObject(state);
-  newState.chosenItemId = '';
-  newState.chosenType = '';
-  newState.chosenItem = {};
-
-  return newState;
-}
-
-function setBodyChanging(state, {isChanging}) {
-  return { ...state, isBodyChanging: isChanging };
-}
-

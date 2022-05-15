@@ -1,20 +1,20 @@
 import { Button, Modal, Typography, Box } from '@mui/material';
 import { useDispatch } from 'react-redux';
 import { styleModal } from '../../../shared/stylesMUI';
-import { returnBodyItem, saveBodyItem } from '../../../store/actions/stateProjectActions';
+import { returnBody, saveBody } from '../../../store/actions/stateProjectActions';
 
 
 function SaveChanges({isOpen, callBack, clearAlertOption}) {
   const dispatch = useDispatch();
 
   const saveBodyHandler = async () => {
-    dispatch(saveBodyItem());
+    dispatch(saveBody());
     callBack();
     clearAlertOption();
   }
 
   const dontSaveBodyHandler = () => {
-    dispatch(returnBodyItem());
+    dispatch(returnBody());
     callBack();
     clearAlertOption();
   }

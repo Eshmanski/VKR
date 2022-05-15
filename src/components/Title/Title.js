@@ -1,39 +1,31 @@
 import { useState, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { Edit, CheckCircle } from '@mui/icons-material';
 import { declinationTitle } from '../../shared/utils';
 import styles from './Title.module.css';
-import { updateRouteTitle } from '../../store/actions/routeDataAction';
-import { updateWorkshopTitle } from '../../store/actions/workshopDataAction';
-import { updateProductTitle } from '../../store/actions/productDataActons';
-import { updateComponentTitle } from '../../store/actions/componentDataAction';
+import { changeTitle } from '../../store/actions/stateProjectActions';
 
-const titleActions = {
-  componentData: updateComponentTitle,
-  productData: updateProductTitle,
-  workshopData: updateWorkshopTitle,
-  routeData: updateRouteTitle,
-}
 
-function Title({itemType, itemId, projectItem}) {
+function Title({ modelId }) {
+  const enterpriseModel  = useSelector(store => store.stateProject.enterpriseModels.find(model => model.id === modelId));
   const dispatch = useDispatch();
   const [isEditTitle, setIsEditTitle] = useState(false);
   const [inputTitle, setInputTitle] = useState('');
-  
+
   useEffect(() => {
-    setInputTitle(projectItem.title);
+    setInputTitle(enterpriseModel.title);
   }, [
-    projectItem.title,
+    enterpriseModel.title,
   ]);
 
   const saveTitle = () => {
-    dispatch(titleActions[itemType]({ itemId, newTitle: inputTitle }))
+    dispatch(changeTitle( modelId, inputTitle ));
     setIsEditTitle(false);
   }
 
   return (
     <div className={styles.header}>
-      {declinationTitle(itemType, 1)}:
+      {declinationTitle(enterpriseModel.type, 1)}:
       {isEditTitle ||
         <>
           <div className={styles.title}>{inputTitle}</div>

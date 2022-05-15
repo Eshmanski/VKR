@@ -25,7 +25,6 @@ function ChooseItem({isOpen, onClose, onAdd, items, type}) {
       break;
   }
 
-
   return (
     <Modal
       open={isOpen}
@@ -45,7 +44,7 @@ function ChooseItem({isOpen, onClose, onAdd, items, type}) {
               onChange={(e) => {setText(e.target.value)}}
             >
               {items.map(item => {
-                return <MenuItem key={item.id} value={item.id}>{item.title}</MenuItem>
+                return <MenuItem key={item.id} value={item.bodyId}>{item.title}</MenuItem>
               })}
             </Select>
             <Button
@@ -54,7 +53,7 @@ function ChooseItem({isOpen, onClose, onAdd, items, type}) {
               color="success" 
               variant="contained"
               onClick={(e) => handleClick(e)}
-              disabled={!(text.trim())}
+              disabled={!(text)}
             >
               Добавить
             </Button>

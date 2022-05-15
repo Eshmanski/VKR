@@ -5,36 +5,36 @@ import RouteSpeedDial from '../../../RouteSpeedDial/RouteSpeedDial';
 import CreateBox from '../../../modals/CreateBox/CreateBox';
 import Title from '../../../Title/Title';
 import { filterWorkshops } from '../../../../shared/utils';
-import { changeBodyItem, deleteChosenItem, returnBodyItem, saveBodyItem, setBodyChanging } from '../../../../store/actions/stateProjectActions';
+import { changeBody, deleteBody, returnBody, saveBody, setIsBodyChanging } from '../../../../store/actions/stateProjectActions';
 import RouteModel from './RouteModel/RouteModel';
 import ConfirmDel from '../../../modals/ConfirmDel/ConfirmDel';
 import styles from './Route.module.css';
 
-function Route({ itemId }) {
-  const { chosenItem, isBodyChanging } = useSelector(store => store.stateProject);
-  const workshopDataItems = useSelector(store => store.workshopData.items);
+function Route({ modelId }) {
+  const { chosenBody, isBodyChanging } = useSelector(store => store.stateProject);
+  const workshopModels = useSelector(store => store.stateProject.enterpriseModels.filter(model => model.type === 'workshop'));
 
   const dispatch = useDispatch();
 
   const changeField = (newState) => {
-    dispatch(changeBodyItem({...chosenItem.body, ...newState}));
-    dispatch(setBodyChanging(true));
+    dispatch(changeBody({...chosenBody, ...newState}));
+    dispatch(setIsBodyChanging(true));
   }
 
-  const saveBody = () => {
-    dispatch(saveBodyItem());
+  const saveBodyHandler = () => {
+    dispatch(saveBody());
   }
 
   const removeChange = () => {
-    dispatch(returnBodyItem());
+    dispatch(returnBody());
   }
 
   const deleteItem = () => {
-    dispatch(deleteChosenItem());
+    dispatch(deleteBody());
   }
 
 
-  const {workshopNodes, lines} = chosenItem.body;
+  const {workshopNodes, workshopLines} = chosenBody;
 
   const [isCreateBox, setIsCreateBox] = useState(false);
   const [isCreateLine, setIsCreateLine] = useState(false);
@@ -52,7 +52,7 @@ function Route({ itemId }) {
   }
 
   const addBox = (workshopId) => {
-    changeField({workshopNodes: [...workshopNodes, {id: workshopId, position: {x: 100, y: 100}}]});
+    changeField({workshopNodes: [...workshopNodes, {workshopId, positionX: 100, positionY: 100}]});
     clearStatus();
   }
 
@@ -78,7 +78,7 @@ function Route({ itemId }) {
       e.stopPropagation();
       e.preventDefault();
     }}>
-      <Title projectItem={chosenItem} itemId={itemId} itemType={'routeData'}></Title>
+      <Title modelId={modelId}></Title>
       <div className={styles.displayWrapper}>
         <div 
           className={styles.display} 
@@ -91,7 +91,7 @@ function Route({ itemId }) {
           <RouteModel
             refDisplay={refDisplay}
             workshopNodes={workshopNodes}
-            lines={lines}
+            lines={workshopLines}
             chosenBox={chosenBox}
             changeField={changeField}
             clearStatus={clearStatus}
@@ -104,14 +104,14 @@ function Route({ itemId }) {
             isOpen={isCreateBox}
             onAddBox={addBox}
             onClose={() => setIsCreateBox(false)}
-            workshopItems={filterWorkshops(workshopDataItems, workshopNodes)}
+            workshopItems={filterWorkshops(workshopModels, workshopNodes)}
           ></CreateBox>
 
           <Button onClick={() => setShowConfirmDel(true)} sx={{position: 'absolute', right: 0, }} color="error" variant="contained">Удалить</Button>
         </div>
         { isBodyChanging && 
           <Box sx={{margin:'10px', position: 'absolute', left: '0px'}}>
-            <Button onClick={saveBody} sx={{marginRight: '10px'}} color="success" variant="contained">Сохранить</Button>
+            <Button onClick={saveBodyHandler} sx={{marginRight: '10px'}} color="success" variant="contained">Сохранить</Button>
             <Button onClick={removeChange} sx={{marginRight: '10px'}} color="error" variant="contained">Отменить</Button>
           </Box>
         }
@@ -124,7 +124,7 @@ function Route({ itemId }) {
         onClose={() => setShowConfirmDel(false)}
         onDel={() => deleteItem()}
         type={'route'}
-        id={itemId}
+        id={modelId}
       ></ConfirmDel>
     </div>
   );

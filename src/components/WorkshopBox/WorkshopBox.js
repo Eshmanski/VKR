@@ -3,14 +3,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { kitcut } from '../../shared/utils';
 import LinkIcon from '@mui/icons-material/Link';
 import styles from './WorkshopBox.module.css';
-import { setChosenItem } from '../../store/actions/stateProjectActions';
+import { fetchBody } from '../../store/actions/stateProjectActions';
 
 
-function WorkshopBox({refDisplay, workshopNode, isCreateLine, isActive, isDelete, chooseBox, deleteBox, updatePosition, parentUpdate, workshopNodes}) {
-  const workshopData = useSelector(store => store
-    .workshopData
-    .items
-    .filter(item => item.id === workshopNode.id))[0];
+function WorkshopBox({refDisplay, workshopNode, isCreateLine, isActive, isDelete, chooseBox, deleteBox, updatePosition, parentUpdate}) {
+  const workshopModel = useSelector(store => store.stateProject.enterpriseModels.find(model => model.type === 'workshop' && workshopNode.workshopId === model.bodyId));
   const dispatch = useDispatch();
     
   const [position, setPosition] = useState({x: 0, y: 0});
@@ -19,10 +16,10 @@ function WorkshopBox({refDisplay, workshopNode, isCreateLine, isActive, isDelete
   const isUpdatePos = useRef(true);
 
   useEffect(() => {
-    setPosition({...workshopNode.position});
+    setPosition({x: workshopNode.positionX, y: workshopNode.positionY});
     parentUpdate();
   }, [
-    workshopNode.position,
+    workshopNode,
     parentUpdate,
   ]);
 
@@ -70,7 +67,7 @@ function WorkshopBox({refDisplay, workshopNode, isCreateLine, isActive, isDelete
 
     refDisplay.current.onmouseup = () => {
       if(isChanged) {
-        updatePosition(workshopNode.id, {x, y});
+        updatePosition(workshopNode.workshopId, {x, y});
       }
       refDisplay.current.onmousemove = null;
       refDisplay.current.onmouseup = null;
@@ -78,36 +75,36 @@ function WorkshopBox({refDisplay, workshopNode, isCreateLine, isActive, isDelete
   }
 
 
-  const handleMoveTo = (itemId, packType) => {
-    dispatch(setChosenItem({itemId, packType}));
+  const handleMoveTo = (model) => {
+    dispatch(fetchBody(model.id, model.type, model.bodyId));
   }
 
   const renderElement = () => {
     if(!isCreateLine && !isDelete) {
       return <div
-        id={workshopNode.id}
+        id={workshopNode.workshopId.toString()}
         className={styles.workshopBox} 
         style={style} 
         onMouseDown={(e) => {switchDrag(e)}}
         onMouseMove={null}
         onMouseEnter={()=>setIsShowLink(true)}
         onMouseLeave={()=>setIsShowLink(false)}
-        title={workshopData.title}
+        title={workshopModel.title}
       >
-        { kitcut(workshopData.title, 12) }
-        {isShowLink && <div className={styles.link} onClick={()=>handleMoveTo(workshopData.id, 'workshopData')}> <LinkIcon></LinkIcon> </div>}
+        { kitcut(workshopModel.title, 12) }
+        {isShowLink && <div className={styles.link} onClick={()=>handleMoveTo(workshopModel)}> <LinkIcon></LinkIcon> </div>}
       </div>
     } else {
       return <div 
-        id={workshopNode.id}
+        id={workshopNode.workshopId.toString()}
         className={styles.workshopBox + ' ' + (isCreateLine ? styles.createLine : styles.deleteBox)} 
         style={style} 
         onMouseDown={null}
         onMouseMove={null}
-        onClick={isCreateLine ? () => chooseBox(workshopNode.id) : () => deleteBox(workshopNode.id)}
-        title={workshopData.title}
+        onClick={isCreateLine ? () => chooseBox(workshopNode.workshopId) : () => deleteBox(workshopNode.workshopId)}
+        title={workshopModel.title}
       >
-        { kitcut(workshopData.title, 12) }
+        { kitcut(workshopModel.title, 12) }
       </div>
     }
   }

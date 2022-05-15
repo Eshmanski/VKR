@@ -19,10 +19,10 @@ function RouteModel({
 
   const updatePosition = (id, position) => {
     const newWorkshopNodes = [...workshopNodes];
-    const idx = newWorkshopNodes.findIndex((item) => item.id === id);
+    const idx = newWorkshopNodes.findIndex((item) => item.workshopId === id);
 
     if(idx !== -1) {
-      newWorkshopNodes[idx] = { id, position };
+      newWorkshopNodes[idx] = { workshopId: id, positionX: position.x, positionY: position.y };
       changeField({workshopNodes: newWorkshopNodes});
     }
   }
@@ -33,25 +33,25 @@ function RouteModel({
     } else {
       if(chosenBox === workshopId) return 0;
 
-      const lineId = `${chosenBox}-${workshopId}`;
-      if(lines.findIndex(item => item.id === lineId) === -1)
-        changeField({lines: [...lines, {id: lineId, start: chosenBox, end: workshopId}]});
+      if(lines.findIndex(item => item.start === chosenBox && item.end === workshopId) === -1)
+        changeField({workshopLines: [...lines, {start: chosenBox, end: workshopId}]});
 
       clearStatus();
     }
   }
 
   const deleteBox = (id) => {
-    const newWorkshopNodes = workshopNodes.filter((item) => item.id !== id);
+    const newWorkshopNodes = workshopNodes.filter((item) => item.workshopId !== id);
     const newLines = lines.filter((item) => item.start !== id && item.end !== id);
 
-    changeField({workshopNodes: newWorkshopNodes, lines: newLines});
+    changeField({workshopNodes: newWorkshopNodes, workshopLines: newLines});
     clearStatus();
   }
 
-  const deleteArrow = (id) => {
-    const newLines = lines.filter((item) => item.id !== id);
-    changeField({lines: newLines});
+  const deleteArrow = (start, end) => {
+    const newLines = lines.filter((item) => {return item.start !== start || item.end !== end});
+
+    changeField({workshopLines: newLines});
     clearStatus();
   }
 
@@ -59,11 +59,10 @@ function RouteModel({
     return (
       <>
         {workshopNodes.map((workshopNode) => <WorkshopBox
-          workshopNodes={workshopNodes}
-          key={workshopNode.id}
+          key={workshopNode.workshopId}
           refDisplay={refDisplay}
           workshopNode={workshopNode}
-          isActive={chosenBox === workshopNode.id}
+          isActive={chosenBox === workshopNode.workshopId}
           isCreateLine={isCreateLine}
           isDelete={isDelete}
           chooseBox={chooseBox}
@@ -79,13 +78,13 @@ function RouteModel({
     <>       
       {renderBoxs()}
 
-      {lines.map(line => <Xarrow 
-        key={line.id}
-        start={line.start}
-        end={line.end}
+      {lines.map((line) => <Xarrow 
+        key={line.start.toString() + '-' + line.end.toString()}
+        start={line.start.toString()}
+        end={line.end.toString()}
         passProps={isDelete 
           ? {
-          onClick: () => deleteArrow(line.id),
+          onClick: () => deleteArrow(line.start, line.end),
           cursor: 'pointer'
           }
           : {}

@@ -1,9 +1,9 @@
 export function declinationTitle(key, num) {
   const names = {
-    productData: ['Изделия', 'Изделие'],
-    componentData: ['Детали', 'Деталь'],
-    workshopData: ['Цеха', 'Цех'],
-    routeData: ['Маршрута', 'Маршрут'],
+    product: ['Изделия', 'Изделие'],
+    component: ['Детали', 'Деталь'],
+    workshop: ['Цеха', 'Цех'],
+    route: ['Маршрута', 'Маршрут'],
     default: ['Элемента', 'Элемент']
   }
 
@@ -22,7 +22,7 @@ export function filterWorkshops(workshops, arr) {
   if(!arr.length) return workshops;
 
   return workshops.filter(workshop => arr.reduce((accum, item) => {
-    return item.id === workshop.id ? false : true && accum
+    return item.workshopId === workshop.bodyId ? false : true && accum
   }, true));
 }
 

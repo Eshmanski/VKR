@@ -4,7 +4,7 @@ import { Button } from '@mui/material';
 import styles from './Product.module.css'
 import Title from '../../../Title/Title';
 import AddIcon from '@mui/icons-material/Add';
-import { changeBodyItem, deleteChosenItem, returnBodyItem, saveBodyItem, setBodyChanging, setChosenItem } from '../../../../store/actions/stateProjectActions';
+import { changeBody, deleteBody, returnBody, saveBody, setIsBodyChanging, fetchBody } from '../../../../store/actions/stateProjectActions';
 import ChooseItem from '../../../modals/ChooseItem/ChooseItem';
 import ConfirmDel from '../../../modals/ConfirmDel/ConfirmDel';
 import ClearIcon from '@mui/icons-material/Clear';
@@ -12,83 +12,83 @@ import { copyObject } from '../../../../shared/utils';
 
 
 
-function Product() {
-  const { chosenItem, isBodyChanging } = useSelector(store => store.stateProject);
-  const routeDataItems = useSelector(store => store.routeData.items);
-  const componentDataItems = useSelector(store => store.componentData.items);
-  const productDataItems = useSelector(store => store.productData.items);
+function Product({ modelId }) {
+  const { chosenBody, isBodyChanging } = useSelector(store => store.stateProject);
+  const routeModels = useSelector(store => store.stateProject.enterpriseModels.filter(model => model.type === 'route'));
+  const componentModels = useSelector(store => store.stateProject.enterpriseModels.filter(model => model.type === 'component'));
+  const productModels = useSelector(store => store.stateProject.enterpriseModels.filter(model => model.type === 'product'));
 
   const dispatch = useDispatch();
 
   const changeField = (key, value) => {
-    dispatch(changeBodyItem({...chosenItem.body, [key]: value}));
+    dispatch(changeBody({...chosenBody, [key]: value}));
   }
 
-  const handleMoveTo = (itemId, packType) => {
-    dispatch(setChosenItem({itemId, packType}));
+  const handleMoveTo = (model) => {
+    dispatch(fetchBody(model.id, model.type, model.bodyId));
   }
 
   const switchChange = () => {
-    dispatch(setBodyChanging(true));
+    dispatch(setIsBodyChanging(true));
   }
 
-  const saveBody = () => {
-    dispatch(saveBodyItem());
+  const saveBodyHandler = () => {
+    dispatch(saveBody());
   }
 
   const removeChange = () => {
-    dispatch(returnBodyItem());
+    dispatch(returnBody());
   }
 
   const deleteItem = () => {
-    dispatch(deleteChosenItem());
+    dispatch(deleteBody());
   }
 
 
-  const itemId = chosenItem.id;
-  const { name, drawing, routeId, componentsId, productsId, description } = chosenItem.body;
+
+  const { name, drawing, routeId, usedComponents, usedProducts, description } = chosenBody;
 
   const [showChooseComponent, setShowChooseComponent] = useState(false);
   const [showChooseProduct, setShowChooseProduct] = useState(false);
   const [showConfirmDel, setShowConfirmDel] = useState(false);
 
   const onAddComponent = (id) => {
-    changeField('componentsId', {...componentsId, [id]: {count: 1}});
+    changeField('usedComponents', [...usedComponents, {id, count: 1}]);
     setShowChooseComponent(false);
   }
 
   const onChangeCountComponent = (id, count) => {
-    const newComponentsId = copyObject(componentsId);
-    newComponentsId[id] = {count};
-    changeField('componentsId', newComponentsId);
+    const newComponents = copyObject(usedComponents);
+    const idx = newComponents.findIndex(item => item.id === id);
+    newComponents[idx].count = count;
+    changeField('usedComponents', newComponents);
   }
 
   const removeComponent = (id) => {
-    const newComponentsId = copyObject(componentsId);
-    delete newComponentsId[id];
-    changeField('componentsId', newComponentsId);
+    const newComponents = usedComponents.filter(item => item.id !== id);
+    changeField('usedComponents', newComponents);
   }
 
   const onAddProduct = (id) => {
-    changeField('productsId', {...productsId, [id]: {count: 1}});
+    changeField('usedProducts', [...usedProducts, {id, count: 1}]);
     setShowChooseProduct(false);
   }
   
   const onChangeCountProduct = (id, count) => {
-    const newProductsId = copyObject(productsId);
-    newProductsId[id] = {count};
-    changeField('productsId', newProductsId);
+    const newProducts = copyObject(usedProducts);
+    const idx = newProducts.findIndex(item => item.id === id)
+    newProducts[idx].count = count;
+    changeField('usedProducts', newProducts);
   }
 
   const removeProduct = (id) => {
-    const newProductsId = copyObject(productsId);
-    delete newProductsId[id];
-    changeField('productsId', newProductsId);
+    const newProducts = usedProducts.filter(item => item.id !== id);
+    changeField('usedProducts', newProducts);
   }
 
   return (
     <div className={styles.info}>
-      <Title projectItem={chosenItem} itemId={itemId} itemType={'productData'}></Title>
+      <Title modelId={modelId}></Title>
 
       <table>
         <tbody>
@@ -124,15 +124,15 @@ function Product() {
             <td>
               {isBodyChanging || 
                 <div
-                  onClick={routeId ? () => handleMoveTo(routeId, 'routeData') : null} 
+                  onClick={routeId ? () => handleMoveTo(routeModels.find(item=>item.bodyId === routeId)) : null} 
                   className={styles.inputBox + ' ' + styles.link}
                 >
-                  {routeDataItems.find(item=>item.id === routeId)?.title}
+                  {routeModels.find(item=>item.bodyId === routeId)?.title}
                 </div>
               }
               {isBodyChanging && <select className={styles.hiddenSelect} value={routeId} onChange={(e) => changeField('routeId', e.target.value)}>
                 <option value=''></option>
-                {routeDataItems.map(item => <option key={item.id} value={item.id}>{item.title}</option>)}
+                {routeModels.map(item => <option key={item.bodyId} value={item.bodyId}>{item.title}</option>)}
               </select>}  
             </td>
           </tr>
@@ -142,16 +142,16 @@ function Product() {
             <td>
               {isBodyChanging || 
                 <>
-                  {Object.keys(productsId).map((id) =>
-                    <div className={styles.itemCard} key={id}>
+                  {usedProducts.map((item) =>
+                    <div className={styles.itemCard} key={item.id}>
                       <div className={styles.itemNum + ' ' + styles.itemNumShow}>
-                        {productsId[id].count}                        
+                        {item.count}                        
                       </div>
                       <div 
-                        onClick={() => handleMoveTo(id, 'productData')}
+                        onClick={() => handleMoveTo(productModels.find(model=>model.bodyId === item.id))}
                         className={styles.itemName + ' ' + styles.link}
                       >
-                        {productDataItems.find(item=>item.id === id)?.title}
+                        {productModels.find(model=>model.bodyId === item.id).title}
                       </div>
                     </div>     
                   )}
@@ -159,18 +159,18 @@ function Product() {
               }
               {isBodyChanging && 
                 <>
-                  {Object.keys(productsId).map((id) =>
-                    <div className={styles.itemCard} key={id}>
+                  {usedProducts.map((item) =>
+                    <div className={styles.itemCard} key={item.id}>
                       <div>
-                        <input value={productsId[id].count} className={styles.itemNum} type="number" onChange={(e)=>onChangeCountProduct(id, e.target.value)}/>
+                        <input value={item.count} className={styles.itemNum} type="number" onChange={(e)=>onChangeCountProduct(item.id, e.target.value)}/>
                       </div>
                       <div 
                         className={styles.itemName + ' ' + styles.itemRed}
                       >
-                        {productDataItems.find(item=>item.id === id)?.title}
+                        {productModels.find(model=>model.bodyId === item.id).title}
                       </div>
                       <div className={styles.clearIcon}>
-                          <ClearIcon onClick={() => removeProduct(id)} sx={{textAlign: 'center', marginTop: '3px'}}></ClearIcon>
+                          <ClearIcon onClick={() => removeProduct(item.id)} sx={{textAlign: 'center', marginTop: '3px'}}></ClearIcon>
                       </div>
                     </div>
                   )}
@@ -187,16 +187,16 @@ function Product() {
             <td>
               {isBodyChanging || 
                 <>
-                  {Object.keys(componentsId).map((id) =>
-                    <div className={styles.itemCard} key={id}>
+                  {usedComponents.map((item) =>
+                    <div className={styles.itemCard} key={item.id}>
                       <div className={styles.itemNum + ' ' + styles.itemNumShow}>
-                        {componentsId[id].count}                        
+                        {item.count}                        
                       </div>
                       <div 
-                        onClick={() => handleMoveTo(id, 'componentData')}
+                        onClick={() => handleMoveTo(componentModels.find(model=>model.bodyId === item.id))}
                         className={styles.itemName + ' ' + styles.link}
-                      >
-                        {componentDataItems.find(item=>item.id === id)?.title}
+                      > 
+                        {componentModels.find(model=>model.bodyId === item.id)?.title}
                       </div>
                     </div>     
                   )}
@@ -204,18 +204,18 @@ function Product() {
               }
               {isBodyChanging && 
                 <>
-                  {Object.keys(componentsId).map((id) =>
-                    <div className={styles.itemCard} key={id}>
+                  {usedComponents.map((item) =>
+                    <div className={styles.itemCard} key={item.id}>
                       <div>
-                        <input value={componentsId[id].count} className={styles.itemNum} type="number" onChange={(e)=>onChangeCountComponent(id, e.target.value)}/>
+                        <input value={item.count} className={styles.itemNum} type="number" onChange={(e)=>onChangeCountComponent(item.id, e.target.value)}/>
                       </div>
                       <div 
                         className={styles.itemName + ' ' + styles.itemRed}
                       >
-                        {componentDataItems.find(item=>item.id === id)?.title}
+                        {componentModels.find(model=>model.bodyId === item.id)?.title}
                       </div>
                       <div className={styles.clearIcon}>
-                          <ClearIcon onClick={() => removeComponent(id)} sx={{textAlign: 'center', marginTop: '3px'}}></ClearIcon>
+                          <ClearIcon onClick={() => removeComponent(item.id)} sx={{textAlign: 'center', marginTop: '3px'}}></ClearIcon>
                       </div>
                     </div>
                   )}
@@ -245,7 +245,7 @@ function Product() {
         {isBodyChanging && 
           <div>
             <Button onClick={() => removeChange()} sx={{margin:'10px'}} color="error" variant="contained">Отменить</Button>
-            <Button onClick={saveBody} sx={{margin:'10px'}} color="success" variant="contained">Сохранить</Button>
+            <Button onClick={saveBodyHandler} sx={{margin:'10px'}} color="success" variant="contained">Сохранить</Button>
           </div>
         }
         <Button onClick={() => setShowConfirmDel(true)} sx={{margin:'10px'}} color="error" variant="contained">Удалить</Button>
@@ -255,7 +255,10 @@ function Product() {
         isOpen={showChooseComponent}
         onClose={() => setShowChooseComponent(false)}
         onAdd={onAddComponent}
-        items={componentDataItems}
+        items={componentModels.filter(model => usedComponents.reduce((acum, usedModel) => {
+          if(model.bodyId === usedModel.id) return acum && false;
+          else return acum;
+        }, true))}
         type='component'
       ></ChooseItem>
 
@@ -263,7 +266,10 @@ function Product() {
         isOpen={showChooseProduct}
         onClose={() => setShowChooseProduct(false)}
         onAdd={onAddProduct}
-        items={productDataItems.filter(item => item.id !== itemId)}
+        items={productModels.filter(item => item.id !== modelId).filter(model => usedProducts.reduce((acum, usedModel) => {
+          if(model.bodyId === usedModel.id) return acum && false;
+          else return acum;
+        }, true))}
         type='product'
       ></ChooseItem>
 
@@ -272,7 +278,7 @@ function Product() {
         onClose={() => setShowConfirmDel(false)}
         onDel={() => deleteItem()}
         type={'product'}
-        id={itemId}
+        id={modelId}
       ></ConfirmDel>
     </div>
   );

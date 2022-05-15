@@ -1,17 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import SearchIcon from '@mui/icons-material/Search';
-import { setChosenItem } from '../../store/actions/stateProjectActions';
+import { fetchBody, setChosenModel } from '../../store/actions/stateProjectActions';
 import styles from './Search.module.css';
 import DragLine from './DragLine/DragLine';
 
 function Search({isShowSearch}) {
-  let allItems = useSelector(store => [
-    ...store.productData.items,
-    ...store.componentData.items,
-    ...store.routeData.items,
-    ...store.workshopData.items
-  ]);
+  let allItems = useSelector(store => store.stateProject.enterpriseModels);
 
   const dispatch = useDispatch();
 
@@ -54,8 +49,8 @@ function Search({isShowSearch}) {
   const style = isShowSearch ? {left: '250px'} : {left: 0, transition: 'left .5s, width .5s'}
   style.width = `${width}px`;
 
-  const handleMoveTo = (itemId, packType) => {
-    dispatch(setChosenItem({itemId, packType}));
+  const handleMoveTo = (itemId, packType, bodyId) => {
+    dispatch(fetchBody(itemId, packType, bodyId));
   }
 
   return (
@@ -90,7 +85,7 @@ function Search({isShowSearch}) {
 
         <div className={styles.itemsList}>
           {allItems.map(item => 
-            <div key={item.id} className={styles.item} onClick={() => handleMoveTo(item.id, item.type + 'Data')}>
+            <div key={item.id} className={styles.item} onClick={() => handleMoveTo(item.id, item.type, item.bodyId)}>
               <img src={`./icons/${item.type}-icon.png`} alt="" />
               <div>{item.title}</div>
             </div>)}

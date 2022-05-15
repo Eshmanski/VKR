@@ -3,45 +3,44 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Button } from '@mui/material';
 import Title from '../../../Title/Title';
 import ConfirmDel from '../../../modals/ConfirmDel/ConfirmDel';
-import { changeBodyItem, deleteChosenItem, returnBodyItem, saveBodyItem, setBodyChanging } from '../../../../store/actions/stateProjectActions';
+import { changeBody, deleteBody, returnBody, saveBody, setIsBodyChanging } from '../../../../store/actions/stateProjectActions';
 import styles from './Workshop.module.css'
 
 
 
-function Workshop() {
-  const { chosenItem, isBodyChanging } = useSelector(store => store.stateProject);
+function Workshop({ modelId }) {
+  const { chosenBody, isBodyChanging } = useSelector(store => store.stateProject);
 
   const dispatch = useDispatch();
 
   const changeField = (key, value) => {
-    dispatch(changeBodyItem({...chosenItem.body, [key]: value}));
+    dispatch(changeBody({...chosenBody, [key]: value}));
   }
 
   const switchChange = () => {
-    dispatch(setBodyChanging(true));
+    dispatch(setIsBodyChanging(true));
   }
 
-  const saveBody = () => {
-    dispatch(saveBodyItem());
+  const saveBodyHandler = () => {
+    dispatch(saveBody());
   }
 
   const removeChange = () => {
-    dispatch(returnBodyItem());
+    dispatch(returnBody());
   }
   
   const deleteItem = () => {
-    dispatch(deleteChosenItem());
+    dispatch(deleteBody());
   }
 
 
-  const itemId = chosenItem.id;
-  const { name, description } = chosenItem.body;
+  const { name, description } = chosenBody;
 
   const [showConfirmDel, setShowConfirmDel] = useState(false);
 
   return (
     <div className={styles.info}>
-      <Title projectItem={chosenItem} itemId={itemId} itemType={'workshopData'}></Title>
+      <Title modelId={modelId}></Title>
 
       <table>
         <tbody>
@@ -81,7 +80,7 @@ function Workshop() {
         {isBodyChanging && 
           <div>
             <Button onClick={() => removeChange()} sx={{margin:'10px'}} color="error" variant="contained">Отменить</Button>
-            <Button onClick={saveBody} sx={{margin:'10px'}} color="success" variant="contained">Сохранить</Button>
+            <Button onClick={saveBodyHandler} sx={{margin:'10px'}} color="success" variant="contained">Сохранить</Button>
           </div>
         }
         <Button onClick={() => setShowConfirmDel(true)} sx={{margin:'10px'}} color="error" variant="contained">Удалить</Button>
@@ -92,7 +91,7 @@ function Workshop() {
         onClose={() => setShowConfirmDel(false)}
         onDel={() => deleteItem()}
         type={'workshop'}
-        id={itemId}
+        id={modelId}
       ></ConfirmDel>
     </div>
   )

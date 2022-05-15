@@ -1,6 +1,5 @@
 import Box from '@mui/material/Box';
 import { useDispatch } from 'react-redux';
-// import { createStore } from 'redux';
 import Sidebar from '../../components/Sidebar/Sidebar';
 import Workspace from '../../components/Workspace/Workspace';
 import { useEffect } from 'react';

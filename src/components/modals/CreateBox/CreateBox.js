@@ -30,7 +30,7 @@ function CreateBox({isOpen, onAddBox, onClose, workshopItems}) {
               onChange={(e) => {setText(e.target.value)}}
             >
               {workshopItems.map(item => {
-                return <MenuItem key={item.id} value={item.id}>{item.title}</MenuItem>
+                return <MenuItem key={item.id} value={item.bodyId}>{item.title}</MenuItem>
               })}
             </Select>
             <Button
@@ -39,7 +39,7 @@ function CreateBox({isOpen, onAddBox, onClose, workshopItems}) {
               color="success" 
               variant="contained"
               onClick={(e) => handleClick(e)}
-              disabled={!(text.trim())}
+              disabled={!text}
             >
               Добавить
             </Button>
